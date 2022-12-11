@@ -10,9 +10,9 @@ export default function Sidebar() {
       <Image src="/images/logo.svg" alt="logo" width={42} height={42} />
 
       <div className="w-full h-96 flex flex-col justify-between">
-        <Menu active={true} Icon={AiOutlineUnorderedList} />
-        <Menu active={false} Icon={AiOutlineHistory} />
-        <Menu active={false} Icon={BiBarChartSquare} />
+        <Menu active={true} Icon={AiOutlineUnorderedList} label="items" />
+        <Menu active={false} Icon={AiOutlineHistory} label="history" />
+        <Menu active={false} Icon={BiBarChartSquare} label="statistics" />
       </div>
 
       <button className="w-[4.2rem] h-[4.2rem] relative rounded-full flex items-center justify-center bg-main-orange text-white text-3xl">

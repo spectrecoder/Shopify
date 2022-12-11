@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .tooltip:before {
+    @apply text-xl;
+  }
+}
+
 * {
   font-family: "Quicksand", sans-serif;
   margin: 0;

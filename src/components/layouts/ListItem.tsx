@@ -7,10 +7,16 @@ export default function ListItem() {
 
   return (
     <div className="flex items-center justify-between mt-8 gap-x-4">
-      <h3 className="text-[1.8rem] leading-9 font-semibold text-black">
-        Chicken 1kg
-        {/* Pre-cooked cord 450g */}
-      </h3>
+      <form className="flex items-center">
+        <input
+          type="checkbox"
+          className="checkbox checkbox-warning mr-5 border-2 border-solid border-main-orange h-7 w-7"
+        />
+        <h3 className="text-[1.8rem] leading-9 font-semibold text-black">
+          Chicken 1kg
+          {/* Pre-cooked cord 450g */}
+        </h3>
+      </form>
 
       {!show ? (
         <button

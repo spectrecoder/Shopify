@@ -4,7 +4,7 @@ import ListItems from "./ListItems"
 
 export default function ActiveList() {
   return (
-    <section className="w-[39rem] h-full bg-[#FFF0DE] p-14 overflow-scroll hideScrollbar">
+    <section className="w-[39rem] h-full bg-[#FFF0DE] pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
       <div className="w-full h-52 rounded-[2.4rem] bg-[#80485B] relative py-7 flex justify-end pr-11 mb-16">
         <div className="w-full h-full absolute -top-6 -left-40">
           <Image src="/images/source.svg" alt="wine" fill />
@@ -29,7 +29,7 @@ export default function ActiveList() {
       <ListItems />
 
       <div className="fixed bottom-0 right-0 w-[39rem] h-52 bg-white flex items-center justify-center">
-        <form className="flex items-center border-2 border-solid border-main-orange w-[31rem] h-24 overflow-hidden rounded-2xl gap-4 pl-6">
+        {/* <form className="flex items-center border-2 border-solid border-main-orange w-[31rem] h-24 overflow-hidden rounded-2xl gap-4 pl-6">
           <input
             placeholder="enter a name"
             type="text"
@@ -38,7 +38,19 @@ export default function ActiveList() {
           <button className="h-full w-[8.7rem] bg-main-orange text-white font-bold text-2xl flex items-center justify-center rounded-tl-2xl rounded-bl-2xl">
             Save
           </button>
-        </form>
+        </form> */}
+
+        <div className="flex items-center justify-center gap-x-16">
+          <label
+            htmlFor="my-modal-6"
+            className="text-[#34333A] text-2xl font-bold cursor-pointer"
+          >
+            cancel
+          </label>
+          <button className="btn btn-info text-2xl w-48 h-24 text-white font-bold normal-case rounded-2xl">
+            Complete
+          </button>
+        </div>
       </div>
     </section>
   )
