@@ -8,6 +8,12 @@
   .tooltip:before {
     @apply text-xl;
   }
+  .myBtn {
+    @apply font-bold text-2xl text-white rounded-2xl normal-case;
+  }
+  .cancelBtn {
+    @apply text-[#34333A] text-2xl font-bold cursor-pointer;
+  }
 }
 
 * {

@@ -41,15 +41,10 @@ export default function ActiveList() {
         </form> */}
 
         <div className="flex items-center justify-center gap-x-16">
-          <label
-            htmlFor="my-modal-6"
-            className="text-[#34333A] text-2xl font-bold cursor-pointer"
-          >
+          <label htmlFor="my-modal-6" className="cancelBtn">
             cancel
           </label>
-          <button className="btn btn-info text-2xl w-48 h-24 text-white font-bold normal-case rounded-2xl">
-            Complete
-          </button>
+          <button className="btn btn-info w-48 h-24 myBtn">Complete</button>
         </div>
       </div>
     </section>
