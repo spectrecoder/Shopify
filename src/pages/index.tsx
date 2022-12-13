@@ -1,6 +1,7 @@
 import Head from "next/head"
 import Items from "../components/itemPage/Items"
 import ActiveList from "../components/layouts/ActiveList"
+import AddItem from "../components/layouts/AddItem"
 import MyModal from "../components/layouts/MyModal"
 import Sidebar from "../components/layouts/Sidebar"
 
@@ -17,7 +18,8 @@ export default function Home() {
 
       <Sidebar />
       <Items />
-      <ActiveList />
+      {/* <ActiveList /> */}
+      <AddItem />
     </main>
   )
 }
