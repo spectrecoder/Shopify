@@ -2,6 +2,7 @@ import Head from "next/head"
 import Items from "../components/itemPage/Items"
 import ActiveList from "../components/layouts/ActiveList"
 import AddItem from "../components/layouts/AddItem"
+import Details from "../components/layouts/Details"
 import MyModal from "../components/layouts/MyModal"
 import Sidebar from "../components/layouts/Sidebar"
 
@@ -19,7 +20,8 @@ export default function Home() {
       <Sidebar />
       <Items />
       {/* <ActiveList /> */}
-      <AddItem />
+      {/* <AddItem /> */}
+      <Details />
     </main>
   )
 }

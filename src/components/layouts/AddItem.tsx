@@ -53,9 +53,7 @@ export default function AddItem() {
 
       <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
         <div className="flex items-center justify-center gap-x-16">
-          <label htmlFor="my-modal-6" className="cancelBtn">
-            cancel
-          </label>
+          <button className="cancelBtn">cancel</button>
           <button className="btn btn-warning w-32 h-24 myBtn">Save</button>
         </div>
       </div>
