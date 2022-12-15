@@ -1,5 +1,14 @@
-import Items from "../components/itemPage/Items"
+import CategoryItems from "../components/layouts/CategoryItems"
+import HeaderPart from "../components/itemPage/HeaderPart"
 
 export default function Home() {
-  return <Items />
+  return (
+    <>
+      <HeaderPart />
+      <CategoryItems />
+      <CategoryItems />
+      <CategoryItems />
+      <CategoryItems />
+    </>
+  )
 }

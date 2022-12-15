@@ -21,7 +21,9 @@ export default function Layout({ children }: Props) {
       <MyModal />
       <Sidebar />
 
-      {children}
+      <section className="flex-grow h-full py-14 px-32 overflow-scroll hideScrollbar">
+        {children}
+      </section>
 
       <ActiveList />
       {/* <AddItem /> */}

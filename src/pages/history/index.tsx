@@ -2,7 +2,7 @@ import { BsCalendarDate, BsChevronRight } from "react-icons/bs"
 
 export default function history() {
   return (
-    <section className="flex-grow h-full py-14 px-32 overflow-scroll hideScrollbar">
+    <>
       <h1 className="capitalize text-[#34333A] font-bold text-4xl mb-16">
         shopping history
       </h1>
@@ -82,6 +82,6 @@ export default function history() {
           </div>
         </div>
       </div>
-    </section>
+    </>
   )
 }
