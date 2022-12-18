@@ -1,10 +1,20 @@
 import Image from "next/image"
 import { HiOutlineArrowNarrowLeft } from "react-icons/hi"
+import { Dispatch, SetStateAction } from "react"
 
-export default function Details() {
+interface Props {
+  setRightSidebar: Dispatch<
+    SetStateAction<"ActiveList" | "AddItem" | "Details">
+  >
+}
+
+export default function Details({ setRightSidebar }: Props) {
   return (
-    <section className="w-[39rem] h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
-      <button className="text-main-orange text-2xl flex items-center gap-x-2 font-bold mb-14">
+    <section className="w-[39rem] min-w-[39rem] h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
+      <button
+        onClick={() => setRightSidebar("ActiveList")}
+        className="text-main-orange text-2xl flex items-center gap-x-2 font-bold mb-14"
+      >
         <HiOutlineArrowNarrowLeft />
         back
       </button>
@@ -46,7 +56,12 @@ export default function Details() {
 
       <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
         <div className="flex items-center justify-center gap-x-16">
-          <button className="cancelBtn">cancel</button>
+          <button
+            onClick={() => setRightSidebar("ActiveList")}
+            className="cancelBtn"
+          >
+            cancel
+          </button>
           <button className="btn btn-warning w-48 h-24 myBtn">
             Add to list
           </button>

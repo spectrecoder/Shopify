@@ -1,8 +1,15 @@
 import CategorySelect from "./CategorySelect"
+import { Dispatch, SetStateAction } from "react"
 
-export default function AddItem() {
+interface Props {
+  setRightSidebar: Dispatch<
+    SetStateAction<"ActiveList" | "AddItem" | "Details">
+  >
+}
+
+export default function AddItem({ setRightSidebar }: Props) {
   return (
-    <section className="w-[39rem] h-full pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
+    <section className="w-[39rem] min-w-[39rem] h-full pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
       <h3 className="text-4xl font-semibold text-black mb-14">
         Add a new item
       </h3>
@@ -53,7 +60,12 @@ export default function AddItem() {
 
       <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
         <div className="flex items-center justify-center gap-x-16">
-          <button className="cancelBtn">cancel</button>
+          <button
+            onClick={() => setRightSidebar("ActiveList")}
+            className="cancelBtn"
+          >
+            cancel
+          </button>
           <button className="btn btn-warning w-32 h-24 myBtn">Save</button>
         </div>
       </div>

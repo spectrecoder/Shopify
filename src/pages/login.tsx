@@ -1,11 +1,12 @@
 import Image from "next/image"
-import { FaDiscord, FaGithub, FaGoogle, FaTwitter } from "react-icons/fa"
-import { useSession, signIn, signOut } from "next-auth/react"
+import { FaGithub, FaGoogle, FaTwitter } from "react-icons/fa"
+import { useSession, signIn, signOut, getSession } from "next-auth/react"
+import { NextPageContext } from "next"
 
 export default function login() {
-  const { data: session } = useSession()
+  // const { data: session } = useSession()
 
-  console.log(session)
+  // console.log(session)
 
   return (
     <section className="bg-white flex justify-center items-center h-screen">
@@ -42,9 +43,25 @@ export default function login() {
             continue with github
           </button>
 
-          <button onClick={() => signOut()}>sign out</button>
+          {/* <button onClick={() => signOut()}>sign out</button> */}
         </div>
       </div>
     </section>
   )
+}
+
+export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context)
+
+  if (session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/",
+      },
+      props: {},
+    }
+  }
+
+  return { props: {} }
 }

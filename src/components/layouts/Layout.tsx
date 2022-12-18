@@ -5,12 +5,17 @@ import MyModal from "./MyModal"
 import Sidebar from "./Sidebar"
 import ActiveList from "./ActiveList"
 import AddItem from "./AddItem"
+import { useState } from "react"
 
 interface Props {
   children: JSX.Element
 }
 
 export default function Layout({ children }: Props) {
+  const [rightSidebar, setRightSidebar] = useState<
+    "ActiveList" | "AddItem" | "Details"
+  >("ActiveList")
+
   return (
     <main className="h-screen w-screen bg-[#FAFAFE] flex">
       <Head>
@@ -25,9 +30,15 @@ export default function Layout({ children }: Props) {
         {children}
       </section>
 
-      <ActiveList />
-      {/* <AddItem /> */}
-      {/* <Details /> */}
+      {rightSidebar === "ActiveList" && (
+        <ActiveList setRightSidebar={setRightSidebar} />
+      )}
+      {rightSidebar === "AddItem" && (
+        <AddItem setRightSidebar={setRightSidebar} />
+      )}
+      {rightSidebar === "Details" && (
+        <Details setRightSidebar={setRightSidebar} />
+      )}
     </main>
   )
 }

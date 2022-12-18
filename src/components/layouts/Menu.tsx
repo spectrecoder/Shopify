@@ -5,11 +5,12 @@ interface Props {
   active: boolean
   Icon: IconType
   label: string
+  location: "/" | "/history" | "/statistics"
 }
 
-export default function Menu({ active, Icon, label }: Props) {
+export default function Menu({ active, Icon, label, location }: Props) {
   return (
-    <Link href="/">
+    <Link href={location}>
       <button
         data-tip={label}
         className={`${
