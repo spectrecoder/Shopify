@@ -1,19 +1,27 @@
+import { Dispatch, SetStateAction } from "react"
 import CreatableSelect from "react-select/creatable"
+import { SingleValue } from "react-select"
 
-const options = [
-  { value: "chocolate", label: "Chocolate" },
-  { value: "strawberry", label: "Strawberry" },
-  { value: "vanilla", label: "Vanilla" },
-]
+const options = ["Chocolate", "Strawberry", "Vanilla"]
 
-export default function CategorySelect() {
+interface Props {
+  setCategoryName: Dispatch<SetStateAction<string | undefined>>
+}
+
+interface Choice {
+  label: string
+  value: string
+}
+
+export default function CategorySelect({ setCategoryName }: Props) {
   return (
     <CreatableSelect
-      options={options}
+      // options={options}
       inputId="category"
       placeholder="Enter a category"
       isClearable
       openMenuOnFocus={true}
+      onChange={(choice: SingleValue<Choice>) => setCategoryName(choice?.value)}
       theme={(theme) => ({
         ...theme,
         colors: {

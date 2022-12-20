@@ -1,5 +1,6 @@
 import CategorySelect from "./CategorySelect"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
+import { trpc } from "../../utils/trpc"
 
 interface Props {
   setRightSidebar: Dispatch<
@@ -8,6 +9,12 @@ interface Props {
 }
 
 export default function AddItem({ setRightSidebar }: Props) {
+  const [categoryName, setCategoryName] = useState<string | undefined>(
+    undefined
+  )
+
+  console.log(categoryName)
+
   return (
     <section className="w-[39rem] min-w-[39rem] h-full pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
       <h3 className="text-4xl font-semibold text-black mb-14">
@@ -54,7 +61,7 @@ export default function AddItem({ setRightSidebar }: Props) {
           <label htmlFor="category" className="labelStyle">
             Category
           </label>
-          <CategorySelect />
+          <CategorySelect setCategoryName={setCategoryName} />
         </div>
       </form>
 

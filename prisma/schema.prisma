@@ -54,3 +54,18 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+model Item {
+    id         String    @id @default(auto()) @map("_id") @db.ObjectId
+    name       String
+    note       String?
+    image      String
+    category   Category? @relation(fields: [categoryId], references: [id])
+    categoryId String?   @db.ObjectId
+}
+
+model Category {
+    id    String @id @default(auto()) @map("_id") @db.ObjectId
+    name  String @unique
+    items Item[]
+}

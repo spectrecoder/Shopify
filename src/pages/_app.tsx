@@ -1,23 +1,33 @@
 import "../styles/globals.css"
-import type { AppProps } from "next/app"
+import type { AppProps, AppType } from "next/app"
 import Layout from "../components/layouts/Layout"
 import { SessionProvider } from "next-auth/react"
+import { trpc } from "../utils/trpc"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 
-export default function App({
+const queryClient = new QueryClient()
+
+const MyApp: AppType = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps) {
+}: AppProps) => {
   return (
-    <SessionProvider session={session}>
-      {Component.name === "auth" ||
-      Component.name === "login" ||
-      Component.name === "Error" ? (
-        <Component {...pageProps} />
-      ) : (
-        <Layout>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider session={session}>
+        {Component.name === "auth" ||
+        Component.name === "login" ||
+        Component.name === "Error" ? (
           <Component {...pageProps} />
-        </Layout>
-      )}
-    </SessionProvider>
+        ) : (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
+      </SessionProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
+
+export default trpc.withTRPC(MyApp)

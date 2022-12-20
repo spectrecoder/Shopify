@@ -2,6 +2,7 @@ import CategoryItems from "../components/layouts/CategoryItems"
 import HeaderPart from "../components/itemPage/HeaderPart"
 import { getSession } from "next-auth/react"
 import { NextPageContext } from "next"
+import { trpc } from "../utils/trpc"
 
 export default function Home() {
   return (
