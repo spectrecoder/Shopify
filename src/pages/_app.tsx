@@ -5,6 +5,7 @@ import { SessionProvider } from "next-auth/react"
 import { trpc } from "../utils/trpc"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
+import { Toaster } from "react-hot-toast"
 
 const queryClient = new QueryClient()
 
@@ -15,6 +16,7 @@ const MyApp: AppType = ({
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>
+        <Toaster position="top-right" reverseOrder={false} />
         {Component.name === "auth" ||
         Component.name === "login" ||
         Component.name === "Error" ? (
@@ -31,3 +33,4 @@ const MyApp: AppType = ({
 }
 
 export default trpc.withTRPC(MyApp)
+// export default MyApp

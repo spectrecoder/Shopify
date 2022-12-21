@@ -1,6 +1,8 @@
 import CategorySelect from "./CategorySelect"
 import { Dispatch, SetStateAction, useState } from "react"
 import { trpc } from "../../utils/trpc"
+import { useForm, SubmitHandler } from "react-hook-form"
+import { toast } from "react-hot-toast"
 
 interface Props {
   setRightSidebar: Dispatch<
@@ -8,12 +10,34 @@ interface Props {
   >
 }
 
+interface FormData {
+  name: string
+  note: string
+  image: string
+}
+
 export default function AddItem({ setRightSidebar }: Props) {
   const [categoryName, setCategoryName] = useState<string | undefined>(
     undefined
   )
+  const { register, handleSubmit, reset } = useForm<FormData>()
+  const { mutate, isLoading } = trpc.item.create.useMutation({
+    onSuccess: (data) => {
+      toast.success("Successfully created new item")
+      reset({ name: "", note: "", image: "" })
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
 
-  console.log(categoryName)
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    if (categoryName === undefined) {
+      toast.error("Category is required")
+      return
+    }
+    mutate({ ...data, categoryName })
+  }
 
   return (
     <section className="w-[39rem] min-w-[39rem] h-full pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
@@ -21,12 +45,13 @@ export default function AddItem({ setRightSidebar }: Props) {
         Add a new item
       </h3>
 
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="group mb-10">
           <label htmlFor="name" className="labelStyle">
             Name
           </label>
           <input
+            {...register("name", { required: true })}
             type="text"
             id="name"
             placeholder="Enter a name"
@@ -39,6 +64,7 @@ export default function AddItem({ setRightSidebar }: Props) {
             Note (optional)
           </label>
           <textarea
+            {...register("note")}
             id="note"
             placeholder="Enter a note"
             className="inputStyle h-44 resize-y pt-6"
@@ -50,6 +76,7 @@ export default function AddItem({ setRightSidebar }: Props) {
             Image
           </label>
           <input
+            {...register("image", { required: true })}
             type="text"
             id="image"
             placeholder="Enter a url"
@@ -63,19 +90,27 @@ export default function AddItem({ setRightSidebar }: Props) {
           </label>
           <CategorySelect setCategoryName={setCategoryName} />
         </div>
-      </form>
-
-      <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
-        <div className="flex items-center justify-center gap-x-16">
-          <button
-            onClick={() => setRightSidebar("ActiveList")}
-            className="cancelBtn"
-          >
-            cancel
-          </button>
-          <button className="btn btn-warning w-32 h-24 myBtn">Save</button>
+        <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
+          <div className="flex items-center justify-center gap-x-16">
+            <button
+              onClick={() => setRightSidebar("ActiveList")}
+              className={`cancelBtn ${
+                isLoading ? "pointer-events-none" : "pointer-events-auto"
+              }`}
+            >
+              cancel
+            </button>
+            <button
+              type="submit"
+              className={`btn btn-warning h-24 w-32 myBtn ${
+                isLoading && "loading"
+              }`}
+            >
+              {isLoading ? "" : "Save"}
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
     </section>
   )
 }
