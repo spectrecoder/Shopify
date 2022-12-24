@@ -3,6 +3,8 @@ import { Dispatch, SetStateAction, useState } from "react"
 import { trpc } from "../../utils/trpc"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { toast } from "react-hot-toast"
+import { useQueryClient } from "@tanstack/react-query"
+import { RouterOutput } from "../../server/trpc"
 
 interface Props {
   setRightSidebar: Dispatch<
@@ -17,6 +19,7 @@ interface FormData {
 }
 
 export default function AddItem({ setRightSidebar }: Props) {
+  const queryClient = useQueryClient()
   const [categoryName, setCategoryName] = useState<string | undefined>(
     undefined
   )
@@ -25,6 +28,35 @@ export default function AddItem({ setRightSidebar }: Props) {
     onSuccess: (data) => {
       toast.success("Successfully created new item")
       reset({ name: "", note: "", image: "" })
+      queryClient.setQueryData(
+        [
+          ["item", "all"],
+          {
+            type: "query",
+          },
+        ],
+        (oldData: RouterOutput["item"]["all"] | undefined) => {
+          let newItem = { ...data, category: data.category || undefined }
+          delete newItem.category
+          const newCatItem: RouterOutput["item"]["all"][number] = {
+            id: data.categoryId!,
+            name: data.category?.name!,
+            items: [newItem],
+          }
+
+          if (oldData === undefined) return [newCatItem]
+
+          const itemsList = oldData.find((i) => i.name === data.category?.name)
+
+          if (itemsList === undefined) return [...oldData, newCatItem]
+
+          return oldData.map((d) =>
+            d.id === itemsList.id
+              ? { ...itemsList, items: [...itemsList.items, newItem] }
+              : d
+          )
+        }
+      )
     },
     onError: (error) => {
       toast.error(error.message)
@@ -92,14 +124,14 @@ export default function AddItem({ setRightSidebar }: Props) {
         </div>
         <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
           <div className="flex items-center justify-center gap-x-16">
-            <button
+            <span
               onClick={() => setRightSidebar("ActiveList")}
               className={`cancelBtn ${
                 isLoading ? "pointer-events-none" : "pointer-events-auto"
               }`}
             >
               cancel
-            </button>
+            </span>
             <button
               type="submit"
               className={`btn btn-warning h-24 w-32 myBtn ${

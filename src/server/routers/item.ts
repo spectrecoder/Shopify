@@ -45,6 +45,23 @@ const itemRouter = router({
         })
       }
     }),
+
+  all: protectedProcedure.query(({ ctx: { prisma } }) => {
+    try {
+      const allItems = prisma.category.findMany({
+        include: {
+          items: true,
+        },
+      })
+      return allItems
+    } catch (err) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An unexpected error occurred, please try again later.",
+        cause: err,
+      })
+    }
+  }),
 })
 
 export default itemRouter

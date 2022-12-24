@@ -7,7 +7,15 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast"
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+    },
+  },
+})
 
 const MyApp: AppType = ({
   Component,

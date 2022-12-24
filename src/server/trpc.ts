@@ -1,6 +1,12 @@
-import { TRPCError, initTRPC } from "@trpc/server"
+import {
+  TRPCError,
+  initTRPC,
+  inferRouterInputs,
+  inferRouterOutputs,
+} from "@trpc/server"
 import SuperJSON from "superjson"
 import { Context } from "./context"
+import { AppRouter } from "./routers/_app"
 
 const t = initTRPC.context<Context>().create({
   transformer: SuperJSON,
@@ -19,6 +25,9 @@ const isAuthenticated = t.middleware(({ next, ctx }) => {
     },
   })
 })
+
+export type RouterInput = inferRouterInputs<AppRouter>
+export type RouterOutput = inferRouterOutputs<AppRouter>
 
 export const router = t.router
 export const publicProcedure = t.procedure
