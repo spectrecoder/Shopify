@@ -41,14 +41,34 @@ export default function AddItem({ setRightSidebar }: Props) {
           const newCatItem: RouterOutput["item"]["all"][number] = {
             id: data.categoryId!,
             name: data.category?.name!,
+            userId: data.userId,
             items: [newItem],
           }
 
-          if (oldData === undefined) return [newCatItem]
+          if (oldData === undefined) {
+            queryClient.setQueryData(
+              ["categories"],
+              [{ label: newCatItem.name, value: newCatItem.name }]
+            )
+            return [newCatItem]
+          }
 
           const itemsList = oldData.find((i) => i.name === data.category?.name)
 
-          if (itemsList === undefined) return [...oldData, newCatItem]
+          if (itemsList === undefined) {
+            const categories = oldData.map((d) => ({
+              label: d.name,
+              value: d.name,
+            }))
+            queryClient.setQueryData(
+              ["categories"],
+              [
+                ...categories,
+                { label: newCatItem.name, value: newCatItem.name },
+              ]
+            )
+            return [...oldData, newCatItem]
+          }
 
           return oldData.map((d) =>
             d.id === itemsList.id
@@ -120,7 +140,10 @@ export default function AddItem({ setRightSidebar }: Props) {
           <label htmlFor="category" className="labelStyle">
             Category
           </label>
-          <CategorySelect setCategoryName={setCategoryName} />
+          <CategorySelect
+            setCategoryName={setCategoryName}
+            queryClient={queryClient}
+          />
         </div>
         <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
           <div className="flex items-center justify-center gap-x-16">

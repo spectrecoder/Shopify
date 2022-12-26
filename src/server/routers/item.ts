@@ -12,7 +12,7 @@ const itemRouter = router({
         categoryName: z.string(),
       })
     )
-    .mutation(async ({ input, ctx: { prisma } }) => {
+    .mutation(async ({ input, ctx: { prisma, session } }) => {
       try {
         const { name, note, image, categoryName } = input
         const createdItem = await prisma.item.create({
@@ -20,6 +20,11 @@ const itemRouter = router({
             name,
             note,
             image,
+            User: {
+              connect: {
+                id: session?.user?.id,
+              },
+            },
             category: {
               connectOrCreate: {
                 where: {
@@ -27,17 +32,30 @@ const itemRouter = router({
                 },
                 create: {
                   name: categoryName,
+                  User: {
+                    connect: {
+                      id: session?.user?.id,
+                    },
+                  },
                 },
               },
             },
           },
           include: {
-            category: true,
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         })
 
+        console.log(createdItem)
+
         return createdItem
       } catch (err) {
+        console.log(err)
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "An unexpected error occurred, please try again later.",
@@ -46,9 +64,14 @@ const itemRouter = router({
       }
     }),
 
-  all: protectedProcedure.query(({ ctx: { prisma } }) => {
+  all: protectedProcedure.query(({ ctx: { prisma, session } }) => {
     try {
       const allItems = prisma.category.findMany({
+        where: {
+          User: {
+            id: session?.user?.id,
+          },
+        },
         include: {
           items: true,
         },

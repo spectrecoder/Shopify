@@ -14,11 +14,19 @@ import { appRouter } from "../server/routers/_app"
 import SuperJSON from "superjson"
 import { createContext, createContextInner } from "../server/context"
 import type { NextApiRequest, NextApiResponse } from "next"
+import { useQueryClient } from "@tanstack/react-query"
 
-export default function Home(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>
-) {
-  const { data: items } = trpc.item.all.useQuery()
+export default function Home({
+  userSession,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const queryClient = useQueryClient()
+  const { data: items } = trpc.item.all.useQuery(undefined, {
+    onSuccess: (data) => {
+      const categories = data.map((d) => ({ label: d.name, value: d.name }))
+      queryClient.setQueryData(["categories"], categories)
+    },
+    enabled: !!userSession,
+  })
 
   return (
     <>
@@ -26,18 +34,14 @@ export default function Home(
       {items?.map((i) => (
         <CategoryItems key={i.id} item={i} />
       ))}
-      {/* <CategoryItems />
-      <CategoryItems />
-      <CategoryItems />
-      <CategoryItems /> */}
     </>
   )
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const session = await getSession(context)
+  const userSession = await getSession(context)
 
-  if (!session) {
+  if (!userSession) {
     return {
       redirect: {
         permanent: false,
@@ -49,11 +53,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const ssg = createProxySSGHelpers({
     router: appRouter,
-    ctx: await createContextInner({ session }),
+    ctx: await createContextInner({ session: userSession }),
     transformer: SuperJSON,
   })
 
   await ssg.item.all.prefetch()
 
-  return { props: { session, trpcState: ssg.dehydrate() } }
+  return { props: { userSession, trpcState: ssg.dehydrate() } }
 }

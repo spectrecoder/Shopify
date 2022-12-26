@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction } from "react"
 import CreatableSelect from "react-select/creatable"
 import { SingleValue } from "react-select"
+import { QueryClient, useQuery } from "@tanstack/react-query"
 
 const options = ["Chocolate", "Strawberry", "Vanilla"]
 
 interface Props {
   setCategoryName: Dispatch<SetStateAction<string | undefined>>
+  queryClient: QueryClient
 }
 
 interface Choice {
@@ -13,10 +15,18 @@ interface Choice {
   value: string
 }
 
-export default function CategorySelect({ setCategoryName }: Props) {
+export default function CategorySelect({
+  setCategoryName,
+  queryClient,
+}: Props) {
+  const { data: categories } = useQuery<Choice[] | undefined>(
+    ["categories"],
+    () => queryClient.getQueryData<Choice[]>(["categories"])
+  )
+
   return (
     <CreatableSelect
-      // options={options}
+      options={categories}
       inputId="category"
       placeholder="Enter a category"
       isClearable
