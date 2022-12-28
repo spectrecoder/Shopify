@@ -3,13 +3,11 @@ import { Dispatch, SetStateAction, useState } from "react"
 import { trpc } from "../../utils/trpc"
 import { useForm, SubmitHandler } from "react-hook-form"
 import { toast } from "react-hot-toast"
-import { useQueryClient } from "@tanstack/react-query"
+import { QueryClient, useQueryClient } from "@tanstack/react-query"
 import { RouterOutput } from "../../server/trpc"
 
 interface Props {
-  setRightSidebar: Dispatch<
-    SetStateAction<"ActiveList" | "AddItem" | "Details">
-  >
+  queryClient: QueryClient
 }
 
 interface FormData {
@@ -18,8 +16,8 @@ interface FormData {
   image: string
 }
 
-export default function AddItem({ setRightSidebar }: Props) {
-  const queryClient = useQueryClient()
+export default function AddItem({ queryClient }: Props) {
+  // const queryClient = useQueryClient()
   const [categoryName, setCategoryName] = useState<string | undefined>(
     undefined
   )
@@ -148,7 +146,9 @@ export default function AddItem({ setRightSidebar }: Props) {
         <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
           <div className="flex items-center justify-center gap-x-16">
             <span
-              onClick={() => setRightSidebar("ActiveList")}
+              onClick={() =>
+                queryClient.setQueryData(["currentMenu"], "ActiveList")
+              }
               className={`cancelBtn ${
                 isLoading ? "pointer-events-none" : "pointer-events-auto"
               }`}

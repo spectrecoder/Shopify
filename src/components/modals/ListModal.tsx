@@ -1,4 +1,4 @@
-export default function MyModal() {
+export default function ListModal() {
   return (
     <>
       <input type="checkbox" id="my-modal-6" className="modal-toggle" />

@@ -1,45 +1,56 @@
-import Image from "next/image"
 import { HiOutlineArrowNarrowLeft } from "react-icons/hi"
 import { Dispatch, SetStateAction } from "react"
+import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query"
 
 interface Props {
-  setRightSidebar: Dispatch<
-    SetStateAction<"ActiveList" | "AddItem" | "Details">
-  >
+  queryClient: QueryClient
 }
 
-export default function Details({ setRightSidebar }: Props) {
+interface CurrentItem {
+  categoryName: string
+  itemName: string
+  note: string
+  image: string
+}
+
+export default function Details({ queryClient }: Props) {
+  const { data: currentItem } = useQuery<CurrentItem>(
+    ["currentItem"],
+    () => queryClient.getQueryData(["currentItem"]) as CurrentItem
+  )
+
   return (
     <section className="w-[39rem] min-w-[39rem] h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
       <button
-        onClick={() => setRightSidebar("ActiveList")}
+        onClick={() => queryClient.setQueryData(["currentMenu"], "ActiveList")}
         className="text-main-orange text-2xl flex items-center gap-x-2 font-bold mb-14"
       >
         <HiOutlineArrowNarrowLeft />
         back
       </button>
 
-      <div className="w-full h-[22rem] relative rounded-[2.5rem] overflow-hidden">
-        <Image
-          src="/images/avocado.jpg"
-          alt="avocado"
-          fill
-          style={{ objectFit: "cover" }}
-        />
-      </div>
+      <img
+        src={currentItem?.image}
+        alt="item"
+        className="object-cover w-full h-[22rem] rounded-[2.5rem] overflow-hidden"
+      />
 
       <div className="mt-12">
         <span className="text-xl text-[#C1C1C4] font-semibold block mb-4">
           name
         </span>
-        <h1 className="black text-4xl font-semibold">Avocado</h1>
+        <h1 className="black text-4xl font-semibold">
+          {currentItem?.itemName}
+        </h1>
       </div>
 
       <div className="mt-12">
         <span className="text-xl text-[#C1C1C4] font-semibold block mb-4">
           category
         </span>
-        <h2 className="black text-3xl font-semibold">Fruit and vegetables</h2>
+        <h2 className="black text-3xl font-semibold">
+          {currentItem?.categoryName}
+        </h2>
       </div>
 
       <div className="mt-12">
@@ -47,21 +58,16 @@ export default function Details({ setRightSidebar }: Props) {
           note
         </span>
         <h2 className="black text-2xl font-semibold leading-8">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit
-          reiciendis doloremque dolorum esse eius unde? Laboriosam deleniti
-          saepe ad quasi quas fugiat rem, molestias at nulla quos ipsam
-          accusantium. Eius.
+          {currentItem?.note}
         </h2>
       </div>
 
       <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
         <div className="flex items-center justify-center gap-x-16">
-          <button
-            onClick={() => setRightSidebar("ActiveList")}
-            className="cancelBtn"
-          >
-            cancel
-          </button>
+          {/* <button className="cancelBtn">delete</button> */}
+          <label htmlFor="my-modal-1" className="cancelBtn">
+            delete
+          </label>
           <button className="btn btn-warning w-48 h-24 myBtn">
             Add to list
           </button>

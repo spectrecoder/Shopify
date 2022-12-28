@@ -2,14 +2,13 @@ import Image from "next/image"
 import { MdModeEditOutline } from "react-icons/md"
 import ListItems from "./ListItems"
 import { Dispatch, SetStateAction } from "react"
+import { QueryClient } from "@tanstack/react-query"
 
 interface Props {
-  setRightSidebar: Dispatch<
-    SetStateAction<"ActiveList" | "AddItem" | "Details">
-  >
+  queryClient: QueryClient
 }
 
-export default function ActiveList({ setRightSidebar }: Props) {
+export default function ActiveList({ queryClient }: Props) {
   return (
     <section className="w-[39rem] min-w-[39rem] h-full bg-[#FFF0DE] pt-14 px-14 pb-64 overflow-scroll hideScrollbar relative">
       <div className="w-full h-52 rounded-[2.4rem] bg-[#80485B] relative py-7 flex justify-end pr-11 mb-16">
@@ -22,7 +21,7 @@ export default function ActiveList({ setRightSidebar }: Props) {
             {"Didn't"} find what you need?
           </p>
           <button
-            onClick={() => setRightSidebar("AddItem")}
+            onClick={() => queryClient.setQueryData(["currentMenu"], "AddItem")}
             className="text-2xl text-[#34333A] font-bold bg-white flex justify-center items-center w-48 h-16 rounded-2xl cursor-pointer"
           >
             Add item

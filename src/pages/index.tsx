@@ -15,6 +15,7 @@ import SuperJSON from "superjson"
 import { createContext, createContextInner } from "../server/context"
 import type { NextApiRequest, NextApiResponse } from "next"
 import { useQueryClient } from "@tanstack/react-query"
+import { useEffect } from "react"
 
 export default function Home({
   userSession,
@@ -25,14 +26,19 @@ export default function Home({
       const categories = data.map((d) => ({ label: d.name, value: d.name }))
       queryClient.setQueryData(["categories"], categories)
     },
+    // onSettled: () => queryClient.setQueryData(["currentMenu"], "ActiveList"),
     enabled: !!userSession,
   })
+
+  // useEffect(() => {
+  //   queryClient.setQueryData(["currentMenu"], "ActiveList")
+  // }, [])
 
   return (
     <>
       <HeaderPart />
       {items?.map((i) => (
-        <CategoryItems key={i.id} item={i} />
+        <CategoryItems key={i.id} item={i} queryClient={queryClient} />
       ))}
     </>
   )

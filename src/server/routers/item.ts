@@ -85,6 +85,23 @@ const itemRouter = router({
       })
     }
   }),
+
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx: { prisma }, input: itemId }) => {
+      try {
+        const deleteItem = await prisma.item.delete({
+          where: { id: itemId },
+        })
+        return deleteItem
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          cause: err,
+        })
+      }
+    }),
 })
 
 export default itemRouter
