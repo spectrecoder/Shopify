@@ -18,7 +18,9 @@ export default function CategoryItems({ item, queryClient }: Props) {
             key={i.id}
             onClick={() => {
               queryClient.setQueryData(["currentItem"], {
+                categoryId: item.id,
                 categoryName: item.name,
+                itemId: i.id,
                 itemName: i.name,
                 note: i.note,
                 image: i.image,

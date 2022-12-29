@@ -26,20 +26,17 @@ export default function Home({
       const categories = data.map((d) => ({ label: d.name, value: d.name }))
       queryClient.setQueryData(["categories"], categories)
     },
-    // onSettled: () => queryClient.setQueryData(["currentMenu"], "ActiveList"),
     enabled: !!userSession,
   })
-
-  // useEffect(() => {
-  //   queryClient.setQueryData(["currentMenu"], "ActiveList")
-  // }, [])
 
   return (
     <>
       <HeaderPart />
-      {items?.map((i) => (
-        <CategoryItems key={i.id} item={i} queryClient={queryClient} />
-      ))}
+      {items?.map((i) =>
+        i.items.length ? (
+          <CategoryItems key={i.id} item={i} queryClient={queryClient} />
+        ) : null
+      )}
     </>
   )
 }
