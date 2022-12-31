@@ -17,6 +17,8 @@ export default function Details({ queryClient }: Props) {
     queryClient.setQueryData(["currentItem"], "")
   }
 
+  function addToList() {}
+
   return (
     <section className="w-[39rem] min-w-[39rem] h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
       <button
@@ -65,7 +67,10 @@ export default function Details({ queryClient }: Props) {
           <label htmlFor="my-modal-1" className="cancelBtn">
             delete
           </label>
-          <button className="btn btn-warning w-48 h-24 myBtn">
+          <button
+            onClick={addToList}
+            className="btn btn-warning w-48 h-24 myBtn"
+          >
             Add to list
           </button>
         </div>

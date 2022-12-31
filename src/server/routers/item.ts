@@ -51,8 +51,6 @@ const itemRouter = router({
           },
         })
 
-        console.log(createdItem)
-
         return createdItem
       } catch (err) {
         console.log(err)

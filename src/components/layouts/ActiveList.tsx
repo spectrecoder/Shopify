@@ -1,14 +1,21 @@
 import Image from "next/image"
 import { MdModeEditOutline } from "react-icons/md"
 import ListItems from "./ListItems"
-import { Dispatch, SetStateAction } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { QueryClient } from "@tanstack/react-query"
+import { trpc } from "../../utils/trpc"
 
 interface Props {
   queryClient: QueryClient
 }
 
 export default function ActiveList({ queryClient }: Props) {
+  const [showEdit, setShowEdit] = useState<boolean>(false)
+
+  const { data: activeList } = trpc.list.read.useQuery()
+
+  console.log(activeList)
+
   return (
     <section className="w-[39rem] min-w-[39rem] h-full bg-[#FFF0DE] pt-14 px-14 pb-64 overflow-scroll hideScrollbar relative">
       <div className="w-full h-52 rounded-[2.4rem] bg-[#80485B] relative py-7 flex justify-end pr-11 mb-16">
@@ -29,7 +36,7 @@ export default function ActiveList({ queryClient }: Props) {
         </div>
       </div>
 
-      <span className="text-[#34333A] text-3xl font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+      {/* <span className="text-[#34333A] text-3xl font-bold absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         No items
       </span>
 
@@ -39,15 +46,19 @@ export default function ActiveList({ queryClient }: Props) {
         width={245}
         height={203}
         className="absolute bottom-48 left-1/2 -translate-x-1/2 z-10"
-      />
+      /> */}
 
-      {/* <h1 className="text-4xl text-[#34333A] font-bold flex items-center justify-between">
-        Shopping list <MdModeEditOutline className="text-4xl cursor-pointer" />
-      </h1> */}
+      <h1 className="text-4xl text-[#34333A] font-bold flex items-center justify-between">
+        Shopping list{" "}
+        <MdModeEditOutline
+          onClick={() => setShowEdit((prev) => !prev)}
+          className="text-4xl cursor-pointer"
+        />
+      </h1>
 
-      {/* <ListItems />
-      <ListItems />
-      <ListItems /> */}
+      <ListItems showEdit={showEdit} />
+      <ListItems showEdit={showEdit} />
+      <ListItems showEdit={showEdit} />
 
       <div className="fixed bottom-0 right-0 w-[39rem] h-52 bg-white flex items-center justify-center">
         <form className="flex items-center border-2 border-solid border-main-orange w-[31rem] h-24 overflow-hidden rounded-2xl gap-4 pl-6">

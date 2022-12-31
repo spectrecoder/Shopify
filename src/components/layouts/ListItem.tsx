@@ -2,15 +2,21 @@ import { useState } from "react"
 import { AiOutlinePlus, AiOutlineMinus } from "react-icons/ai"
 import { BsTrash } from "react-icons/bs"
 
-export default function ListItem() {
-  const [show, setShow] = useState<boolean>(false)
+interface Props {
+  showEdit: boolean
+}
+
+export default function ListItem({ showEdit }: Props) {
+  const [editQuantity, setEditQuantity] = useState<boolean>(false)
 
   return (
     <div className="flex items-center justify-between mt-8 gap-x-4">
       <form className="flex items-center">
         <input
           type="checkbox"
-          className="checkbox checkbox-warning mr-5 border-2 border-solid border-main-orange h-7 w-7"
+          className={`checkbox checkbox-warning mr-5 border-2 border-solid border-main-orange h-7 w-7 ${
+            showEdit ? "block" : "hidden"
+          }`}
         />
         <h3 className="text-[1.8rem] leading-9 font-semibold text-black">
           Chicken 1kg
@@ -18,9 +24,9 @@ export default function ListItem() {
         </h3>
       </form>
 
-      {!show ? (
+      {!editQuantity ? (
         <button
-          onClick={() => setShow((prev) => !prev)}
+          onClick={() => setEditQuantity((prev) => !prev)}
           className="text-main-orange text-xl font-semibold border-2 border-solid border-main-orange rounded-full flex items-center justify-center w-28 h-14"
         >
           3 pcs
@@ -32,7 +38,7 @@ export default function ListItem() {
           </button>
           <AiOutlineMinus className="text-3xl text-main-orange cursor-pointer" />
           <button
-            onClick={() => setShow((prev) => !prev)}
+            onClick={() => setEditQuantity((prev) => !prev)}
             className="text-main-orange text-xl font-semibold border-2 border-solid border-main-orange rounded-full flex items-center justify-center w-28 h-14"
           >
             3 pcs
