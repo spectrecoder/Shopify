@@ -2,6 +2,18 @@ import { protectedProcedure, router } from "../trpc"
 import { z } from "zod"
 import { TRPCError } from "@trpc/server"
 
+const listInclude = {
+  items: {
+    select: {
+      id: true,
+      name: true,
+      category: true,
+      quantity: true,
+      isDone: true,
+    },
+  },
+}
+
 const listRouter = router({
   createOrUpdate: protectedProcedure
     .input(
@@ -15,7 +27,7 @@ const listRouter = router({
         try {
           const upsertList = await prisma.list.upsert({
             where: {
-              id: listID,
+              id: listID || "62ee8fa9837792d2c87e0ff9",
             },
             update: {
               items: {
@@ -30,12 +42,14 @@ const listRouter = router({
                 connect: itemIDs[0],
               },
             },
+            include: listInclude,
           })
 
-          console.log(upsertList)
+          // console.log(upsertList)
 
           return upsertList
         } catch (err) {
+          console.log(err)
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
             message: "An unexpected error occurred, please try again later.",
@@ -52,6 +66,7 @@ const listRouter = router({
           userId: session?.user?.id,
           isActive: true,
         },
+        include: listInclude,
       })
 
       return list

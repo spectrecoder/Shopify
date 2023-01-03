@@ -1,6 +1,9 @@
 import { HiOutlineArrowNarrowLeft } from "react-icons/hi"
 import { Dispatch, SetStateAction } from "react"
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query"
+import { RouterOutput } from "../../server/trpc"
+import { trpc } from "../../utils/trpc"
+import { toast } from "react-hot-toast"
 
 interface Props {
   queryClient: QueryClient
@@ -12,12 +15,50 @@ export default function Details({ queryClient }: Props) {
     () => queryClient.getQueryData(["currentItem"]) as CurrentItem
   )
 
+  const { mutate } = trpc.list.createOrUpdate.useMutation({
+    onSuccess: (data, variables, context) => {
+      toast.success("Added to the list")
+      goBack()
+      queryClient.setQueryData(
+        [
+          ["list", "read"],
+          {
+            type: "query",
+          },
+        ],
+        data
+      )
+    },
+  })
+
   function goBack(): void {
     queryClient.setQueryData(["currentMenu"], "ActiveList")
     queryClient.setQueryData(["currentItem"], "")
   }
 
-  function addToList() {}
+  function addToList() {
+    if (!currentItem) return
+
+    const list: RouterOutput["list"]["read"] | undefined =
+      queryClient.getQueryData([
+        ["list", "read"],
+        {
+          type: "query",
+        },
+      ])
+
+    if (list?.itemIDs.includes(currentItem.itemId)) {
+      toast.error("Item already in the list")
+      return
+    }
+
+    mutate({
+      itemIDs: list
+        ? [...list.itemIDs.map((id) => ({ id })), { id: currentItem.itemId }]
+        : [{ id: currentItem.itemId }],
+      listID: list?.id,
+    })
+  }
 
   return (
     <section className="w-[39rem] min-w-[39rem] h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
