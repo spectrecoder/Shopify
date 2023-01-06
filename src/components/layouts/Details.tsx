@@ -48,14 +48,14 @@ export default function Details({ queryClient }: Props) {
         },
       ])
 
-    if (list?.itemIDs.includes(currentItem.itemId)) {
+    if (list?.items.find((i) => i.id === currentItem.itemId)) {
       toast.error("Item already in the list")
       return
     }
 
     mutate({
       itemIDs: list
-        ? [...list.itemIDs.map((id) => ({ id })), { id: currentItem.itemId }]
+        ? [...list.items.map((i) => ({ id: i.id })), { id: currentItem.itemId }]
         : [{ id: currentItem.itemId }],
       listID: list?.id,
     })
@@ -65,7 +65,7 @@ export default function Details({ queryClient }: Props) {
     <section className="w-[39rem] min-w-[39rem] h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
       <button
         onClick={goBack}
-        className="text-main-orange text-2xl flex items-center gap-x-2 font-bold mb-14"
+        className="flex items-center text-2xl font-bold text-main-orange gap-x-2 mb-14"
       >
         <HiOutlineArrowNarrowLeft />
         back
@@ -81,7 +81,7 @@ export default function Details({ queryClient }: Props) {
         <span className="text-xl text-[#C1C1C4] font-semibold block mb-4">
           name
         </span>
-        <h1 className="black text-4xl font-semibold">
+        <h1 className="text-4xl font-semibold black">
           {currentItem?.itemName}
         </h1>
       </div>
@@ -90,7 +90,7 @@ export default function Details({ queryClient }: Props) {
         <span className="text-xl text-[#C1C1C4] font-semibold block mb-4">
           category
         </span>
-        <h2 className="black text-3xl font-semibold">
+        <h2 className="text-3xl font-semibold black">
           {currentItem?.categoryName}
         </h2>
       </div>
@@ -99,7 +99,7 @@ export default function Details({ queryClient }: Props) {
         <span className="text-xl text-[#C1C1C4] font-semibold block mb-4">
           note
         </span>
-        <h2 className="black text-2xl font-semibold leading-8">
+        <h2 className="text-2xl font-semibold leading-8 black">
           {currentItem?.note}
         </h2>
       </div>
@@ -111,7 +111,7 @@ export default function Details({ queryClient }: Props) {
           </label>
           <button
             onClick={addToList}
-            className="btn btn-warning w-48 h-24 myBtn"
+            className="w-48 h-24 btn btn-warning myBtn"
           >
             Add to list
           </button>

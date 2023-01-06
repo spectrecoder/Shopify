@@ -86,12 +86,35 @@ const itemRouter = router({
 
   delete: protectedProcedure
     .input(z.string())
-    .mutation(async ({ ctx: { prisma }, input: itemId }) => {
+    .mutation(async ({ ctx: { prisma, session }, input: itemId }) => {
       try {
         const deleteItem = await prisma.item.delete({
           where: { id: itemId },
         })
         return deleteItem
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          cause: err,
+        })
+      }
+    }),
+  updateQuantity: protectedProcedure
+    .input(z.object({ itemID: z.string(), qty: z.number() }))
+    .mutation(async ({ input: { itemID, qty }, ctx: { prisma } }) => {
+      try {
+        const updateQuantity = await prisma.item.update({
+          where: {
+            id: itemID,
+          },
+          data: {
+            quantity: {
+              increment: qty,
+            },
+          },
+        })
+        return { itemID, qty }
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

@@ -67,8 +67,8 @@ model Item {
     categoryId String?   @db.ObjectId
     User       User?     @relation(fields: [userId], references: [id])
     userId     String?   @db.ObjectId
-    listIDs    String[]  @db.ObjectId
-    List       List[]    @relation(fields: [listIDs], references: [id])
+    listID     String?   @db.ObjectId
+    List       List?     @relation(fields: [listID], references: [id])
     quantity   Int       @default(1)
     isDone     Boolean   @default(false)
 }
@@ -82,11 +82,10 @@ model Category {
 }
 
 model List {
-    id       String   @id @default(auto()) @map("_id") @db.ObjectId
-    isActive Boolean  @default(true)
-    listName String   @default("Shopping list")
-    user     User?    @relation(fields: [userId], references: [id])
-    userId   String?  @db.ObjectId
-    itemIDs  String[] @db.ObjectId
-    items    Item[]   @relation(fields: [itemIDs], references: [id])
+    id       String  @id @default(auto()) @map("_id") @db.ObjectId
+    isActive Boolean @default(true)
+    listName String  @default("Shopping list")
+    user     User?   @relation(fields: [userId], references: [id])
+    userId   String? @db.ObjectId
+    items    Item[]
 }

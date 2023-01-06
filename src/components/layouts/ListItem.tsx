@@ -19,7 +19,9 @@ export default function ListItem({
   queryClient,
   listId,
 }: Props) {
+  const [itemQuantity, setItemQuantity] = useState<number>(1)
   const [editQuantity, setEditQuantity] = useState<boolean>(false)
+
   const { mutate } = trpc.list.removeItem.useMutation({
     onSuccess: (data) => {
       toast.success("Removed from the list")
@@ -39,6 +41,12 @@ export default function ListItem({
     mutate({ listID: listId, itemID: { id: item.id } })
   }
 
+  function toggleQuantity() {
+    setEditQuantity((prev) => !prev)
+    if (editQuantity === true) {
+    }
+  }
+
   return (
     <div className="flex items-center justify-between mt-6 gap-x-4">
       <form className="flex items-center">
@@ -56,8 +64,8 @@ export default function ListItem({
 
       {!editQuantity ? (
         <button
-          onClick={() => setEditQuantity((prev) => !prev)}
-          className="text-main-orange text-xl font-semibold border-2 border-solid border-main-orange rounded-full flex items-center justify-center w-28 h-14"
+          onClick={toggleQuantity}
+          className="flex items-center justify-center text-xl font-semibold border-2 border-solid rounded-full text-main-orange border-main-orange w-28 h-14"
         >
           {item.quantity} pcs
         </button>
@@ -69,14 +77,22 @@ export default function ListItem({
           >
             <BsTrash className="w-6 h-6 text-white" />
           </button>
-          <AiOutlineMinus className="text-3xl text-main-orange cursor-pointer" />
+          <AiOutlineMinus
+            className="text-3xl cursor-pointer text-main-orange"
+            onClick={() =>
+              setItemQuantity((prev) => (prev === 1 ? 1 : prev - 1))
+            }
+          />
           <button
             onClick={() => setEditQuantity((prev) => !prev)}
-            className="text-main-orange text-xl font-semibold border-2 border-solid border-main-orange rounded-full flex items-center justify-center w-28 h-14"
+            className="flex items-center justify-center text-xl font-semibold border-2 border-solid rounded-full select-none text-main-orange border-main-orange w-28 h-14"
           >
-            {item.quantity} pcs
+            {itemQuantity} pcs
           </button>
-          <AiOutlinePlus className="text-3xl text-main-orange cursor-pointer" />
+          <AiOutlinePlus
+            className="text-3xl cursor-pointer text-main-orange"
+            onClick={() => setItemQuantity((prev) => prev + 1)}
+          />
         </div>
       )}
     </div>
