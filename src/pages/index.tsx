@@ -1,21 +1,13 @@
-import CategoryItems from "../components/layouts/CategoryItems"
-import HeaderPart from "../components/itemPage/HeaderPart"
-import { getSession } from "next-auth/react"
-import {
-  GetServerSidePropsContext,
-  GetStaticPropsContext,
-  NextPageContext,
-  InferGetServerSidePropsType,
-} from "next"
-import { trpc } from "../utils/trpc"
-import { Session } from "next-auth"
-import { createProxySSGHelpers } from "@trpc/react-query/ssg"
-import { appRouter } from "../server/routers/_app"
-import SuperJSON from "superjson"
-import { createContext, createContextInner } from "../server/context"
-import type { NextApiRequest, NextApiResponse } from "next"
 import { useQueryClient } from "@tanstack/react-query"
-import { useEffect } from "react"
+import { createProxySSGHelpers } from "@trpc/react-query/ssg"
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next"
+import { getSession } from "next-auth/react"
+import SuperJSON from "superjson"
+import HeaderPart from "../components/itemPage/HeaderPart"
+import CategoryItems from "../components/layouts/CategoryItems"
+import { createContextInner } from "../server/context"
+import { appRouter } from "../server/routers/_app"
+import { trpc } from "../utils/trpc"
 
 export default function Home({
   userSession,

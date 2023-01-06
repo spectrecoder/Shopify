@@ -22,7 +22,7 @@ const itemRouter = router({
             image,
             User: {
               connect: {
-                id: session?.user?.id,
+                id: session.user.id,
               },
             },
             category: {
@@ -67,7 +67,7 @@ const itemRouter = router({
       const allItems = prisma.category.findMany({
         where: {
           User: {
-            id: session?.user?.id,
+            id: session.user.id,
           },
         },
         include: {

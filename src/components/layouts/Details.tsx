@@ -4,6 +4,7 @@ import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query"
 import { RouterOutput } from "../../server/trpc"
 import { trpc } from "../../utils/trpc"
 import { toast } from "react-hot-toast"
+import { CurrentItem } from "../../types/types"
 
 interface Props {
   queryClient: QueryClient
@@ -16,7 +17,7 @@ export default function Details({ queryClient }: Props) {
   )
 
   const { mutate } = trpc.list.createOrUpdate.useMutation({
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data) => {
       toast.success("Added to the list")
       goBack()
       queryClient.setQueryData(

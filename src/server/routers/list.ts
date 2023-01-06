@@ -63,7 +63,7 @@ const listRouter = router({
     try {
       const list = await prisma.list.findFirst({
         where: {
-          userId: session?.user?.id,
+          userId: session.user.id,
           isActive: true,
         },
         include: listInclude,
@@ -78,6 +78,56 @@ const listRouter = router({
       })
     }
   }),
+
+  removeItem: protectedProcedure
+    .input(
+      z.object({ itemID: z.object({ id: z.string() }), listID: z.string() })
+    )
+    .mutation(async ({ input: { itemID, listID }, ctx: { prisma } }) => {
+      try {
+        const removeItem = await prisma.list.update({
+          where: {
+            id: listID,
+          },
+          data: {
+            items: {
+              disconnect: itemID,
+            },
+          },
+          include: listInclude,
+        })
+
+        return removeItem
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          cause: err,
+        })
+      }
+    }),
+  updateListName: protectedProcedure
+    .input(z.object({ listName: z.string(), listID: z.string() }))
+    .mutation(async ({ input: { listName, listID }, ctx: { prisma } }) => {
+      try {
+        const updateName = await prisma.list.update({
+          where: {
+            id: listID,
+          },
+          data: {
+            listName,
+          },
+          include: listInclude,
+        })
+        return updateName
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          cause: err,
+        })
+      }
+    }),
 })
 
 export default listRouter
