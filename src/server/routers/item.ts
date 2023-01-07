@@ -109,12 +109,27 @@ const itemRouter = router({
             id: itemID,
           },
           data: {
-            quantity: {
-              increment: qty,
-            },
+            quantity: qty,
           },
         })
-        return { itemID, qty }
+        return { itemID: updateQuantity.id, qty: updateQuantity.quantity }
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          cause: err,
+        })
+      }
+    }),
+  updateDone: protectedProcedure
+    .input(z.object({ itemID: z.string(), isDone: z.boolean() }))
+    .mutation(async ({ input: { itemID, isDone }, ctx: { prisma } }) => {
+      try {
+        const updateDone = await prisma.item.update({
+          where: { id: itemID },
+          data: { isDone },
+        })
+        return { itemID: updateDone.id, isDone: updateDone.isDone }
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
