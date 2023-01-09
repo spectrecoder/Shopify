@@ -122,14 +122,28 @@ const itemRouter = router({
       }
     }),
   updateDone: protectedProcedure
-    .input(z.object({ itemID: z.string(), isDone: z.boolean() }))
-    .mutation(async ({ input: { itemID, isDone }, ctx: { prisma } }) => {
-      try {
-        const updateDone = await prisma.item.update({
-          where: { id: itemID },
-          data: { isDone },
+    .input(
+      z.object({ trueIDs: z.string().array(), falseIDs: z.string().array() })
+    )
+    .mutation(async ({ input: { trueIDs, falseIDs }, ctx: { prisma } }) => {
+      function updateIsDoneStatus(ids: string[], status: boolean) {
+        return prisma.item.updateMany({
+          where: {
+            id: {
+              in: ids,
+            },
+          },
+          data: {
+            isDone: status,
+          },
         })
-        return { itemID: updateDone.id, isDone: updateDone.isDone }
+      }
+      try {
+        await Promise.all([
+          updateIsDoneStatus(trueIDs, true),
+          updateIsDoneStatus(falseIDs, false),
+        ])
+        return { trueIDs, falseIDs }
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

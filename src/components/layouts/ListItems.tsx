@@ -1,4 +1,5 @@
 import { QueryClient } from "@tanstack/react-query"
+import { Dispatch, SetStateAction } from "react"
 import { ActiveListItem } from "../../types/types"
 import ListItem from "./ListItem"
 
@@ -7,6 +8,8 @@ interface Props {
   catItems: [string, ActiveListItem[]]
   queryClient: QueryClient
   listId: string
+  setTrueIDs: Dispatch<SetStateAction<string[]>>
+  setFalseIDs: Dispatch<SetStateAction<string[]>>
 }
 
 export default function ListItems({
@@ -14,6 +17,8 @@ export default function ListItems({
   catItems,
   queryClient,
   listId,
+  setTrueIDs,
+  setFalseIDs,
 }: Props) {
   return (
     <div className="mt-[3.9rem]">
@@ -26,6 +31,8 @@ export default function ListItems({
           item={item}
           queryClient={queryClient}
           listId={listId}
+          setTrueIDs={setTrueIDs}
+          setFalseIDs={setFalseIDs}
         />
       ))}
     </div>

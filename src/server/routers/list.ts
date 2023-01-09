@@ -128,6 +128,27 @@ const listRouter = router({
         })
       }
     }),
+  listComplete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ input: listID, ctx: { prisma } }) => {
+      try {
+        const completeList = await prisma.list.update({
+          where: {
+            id: listID,
+          },
+          data: {
+            isActive: false,
+          },
+        })
+        return completeList.isActive
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          cause: err,
+        })
+      }
+    }),
 })
 
 export default listRouter
