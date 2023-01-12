@@ -86,11 +86,21 @@ const itemRouter = router({
 
   delete: protectedProcedure
     .input(z.string())
-    .mutation(async ({ ctx: { prisma, session }, input: itemId }) => {
+    .mutation(async ({ ctx: { prisma }, input: itemId }) => {
       try {
-        const deleteItem = await prisma.item.delete({
-          where: { id: itemId },
-        })
+        const [_, deleteItem] = await prisma.$transaction([
+          prisma.item.update({
+            where: { id: itemId },
+            data: {
+              lists: {
+                set: [],
+              },
+            },
+          }),
+          prisma.item.delete({
+            where: { id: itemId },
+          }),
+        ])
         return deleteItem
       } catch (err) {
         throw new TRPCError({

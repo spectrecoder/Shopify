@@ -1,10 +1,9 @@
-import { HiOutlineArrowNarrowLeft } from "react-icons/hi"
-import { Dispatch, SetStateAction } from "react"
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query"
-import { RouterOutput } from "../../server/trpc"
-import { trpc } from "../../utils/trpc"
+import { QueryClient, useQuery } from "@tanstack/react-query"
 import { toast } from "react-hot-toast"
+import { HiOutlineArrowNarrowLeft } from "react-icons/hi"
+import { RouterOutput } from "../../server/trpc"
 import { CurrentItem } from "../../types/types"
+import { trpc } from "../../utils/trpc"
 
 interface Props {
   queryClient: QueryClient

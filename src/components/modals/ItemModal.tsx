@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query"
 import { useRef } from "react"
 import { toast } from "react-hot-toast"
 import { RouterOutput } from "../../server/trpc"
+import { CurrentItem } from "../../types/types"
 import { trpc } from "../../utils/trpc"
 
 export default function ItemModal() {

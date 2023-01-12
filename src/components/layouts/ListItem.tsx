@@ -87,7 +87,7 @@ export default function ListItem({
   }
 
   function switchQtyMode() {
-    setEditQuantity(true)
+    setEditQuantity(item.isDone || showEdit ? false : true)
     setItemQuantity(item.quantity)
   }
 
@@ -129,7 +129,7 @@ export default function ListItem({
         </h3>
       </form>
 
-      {!editQuantity || item.isDone ? (
+      {!editQuantity || item.isDone || showEdit ? (
         <button
           onClick={switchQtyMode}
           className="flex items-center justify-center text-xl font-semibold border-2 border-solid rounded-full text-main-orange border-main-orange w-28 h-14"

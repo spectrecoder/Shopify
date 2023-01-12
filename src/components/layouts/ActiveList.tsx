@@ -1,11 +1,13 @@
-import Image from "next/image"
-import { MdModeEditOutline } from "react-icons/md"
-import ListItems from "./ListItems"
-import { Dispatch, SetStateAction, useState, useMemo, MouseEvent } from "react"
 import { QueryClient } from "@tanstack/react-query"
-import { trpc } from "../../utils/trpc"
-import { RouterOutput } from "../../server/trpc"
+import Image from "next/image"
+import { MouseEvent, useMemo, useState } from "react"
 import { toast } from "react-hot-toast"
+import { MdModeEditOutline } from "react-icons/md"
+import useListStatus from "../../hooks/useListStatus"
+import { RouterOutput } from "../../server/trpc"
+import { trpc } from "../../utils/trpc"
+import ListModal from "../modals/ListModal"
+import ListItems from "./ListItems"
 
 interface Props {
   queryClient: QueryClient
@@ -16,6 +18,7 @@ export default function ActiveList({ queryClient }: Props) {
   const [listName, setListName] = useState<string>("")
   const [trueIDs, setTrueIDs] = useState<string[]>([])
   const [falseIDs, setFalseIDs] = useState<string[]>([])
+  const { mutate: completeMutate } = useListStatus({ setShowEdit })
 
   const { data: activeList, isLoading } = trpc.list.read.useQuery()
   const { mutate, isLoading: mutateLoading } =
@@ -70,27 +73,6 @@ export default function ActiveList({ queryClient }: Props) {
     },
   })
 
-  const { mutate: completeMutate } = trpc.list.listComplete.useMutation({
-    onSuccess: () => {
-      queryClient.setQueryData(
-        [
-          ["list", "read"],
-          {
-            type: "query",
-          },
-        ],
-        null
-      )
-      toast.success("Successfully completed the list.")
-    },
-    onError: () => {
-      toast.error("Server error. Please try again later.")
-    },
-    onSettled: () => {
-      setShowEdit(false)
-    },
-  })
-
   const filteredItems = useMemo(() => {
     if (!activeList) return
 
@@ -127,13 +109,15 @@ export default function ActiveList({ queryClient }: Props) {
 
   function completeList() {
     if (!activeList) return
-    completeMutate(activeList.id)
+    completeMutate({ listID: activeList.id, status: "COMPLETED" })
   }
 
   if (isLoading) return <h1>Loading...</h1>
 
   return (
     <section className="w-[39rem] min-w-[39rem] h-full bg-[#FFF0DE] pt-14 px-14 pb-64 overflow-scroll hideScrollbar relative">
+      <ListModal setShowEdit={setShowEdit} listID={activeList?.id} />
+
       <div className="w-full h-52 rounded-[2.4rem] bg-[#80485B] relative py-7 flex justify-end pr-11 mb-16">
         <div className="absolute w-full h-full -top-6 -left-40">
           <Image src="/images/source.svg" alt="wine" fill />

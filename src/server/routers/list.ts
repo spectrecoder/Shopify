@@ -64,7 +64,7 @@ const listRouter = router({
       const list = await prisma.list.findFirst({
         where: {
           userId: session.user.id,
-          isActive: true,
+          status: "ONGOING",
         },
         include: listInclude,
       })
@@ -128,19 +128,32 @@ const listRouter = router({
         })
       }
     }),
-  listComplete: protectedProcedure
-    .input(z.string())
-    .mutation(async ({ input: listID, ctx: { prisma } }) => {
+  listStatus: protectedProcedure
+    .input(
+      z.object({
+        listID: z.string(),
+        status: z.enum(["COMPLETED", "CANCELLED"]),
+      })
+    )
+    .mutation(async ({ input: { listID, status }, ctx: { prisma } }) => {
       try {
-        const completeList = await prisma.list.update({
+        await prisma.list.update({
           where: {
             id: listID,
           },
           data: {
-            isActive: false,
+            status,
+            items: {
+              updateMany: {
+                where: {},
+                data: {
+                  quantity: 1,
+                  isDone: false,
+                },
+              },
+            },
           },
         })
-        return completeList.isActive
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
