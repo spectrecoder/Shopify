@@ -1,9 +1,51 @@
+import { createProxySSGHelpers } from "@trpc/react-query/ssg"
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next"
+import { getSession } from "next-auth/react"
 import { BsCalendarDate, BsChevronRight } from "react-icons/bs"
+import SuperJSON from "superjson"
+import { createContextInner } from "../../server/context"
+import { appRouter } from "../../server/routers/_app"
+import { trpc } from "../../utils/trpc"
+import { useMemo } from "react"
+import { formatDate, formateDateTwo } from "../../utils/utilityFunctions"
+import Link from "next/link"
 
 // t4UR3b5haZ6em8CmB55-UUZMp9CwM2Ujd_-96xXj3oSOEN0NXR - secret
 // SDFQSThXWTBoRE03QUstN3Jjd1o6MTpjaQ - client
 
-export default function history() {
+export default function history({
+  userSession,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const {
+    data: usersLists,
+    isLoading,
+    isError,
+  } = trpc.list.allLists.useQuery(undefined, {
+    enabled: !!userSession,
+  })
+
+  const filteredLists = useMemo(() => {
+    if (!usersLists) return
+
+    const filtered: { [key: string]: typeof usersLists } = {}
+
+    usersLists.forEach((i) => {
+      if (i.status !== "ONGOING") {
+        const formattedDate = formatDate(i.createdAt)
+        if (formattedDate in filtered) {
+          filtered[formattedDate] = [...filtered[formattedDate], i]
+        } else {
+          filtered[formattedDate] = [i]
+        }
+      }
+    })
+
+    return Object.entries(filtered)
+  }, [usersLists])
+
+  if (isLoading) return <h1>Loading...</h1>
+  if (isError) return <h1>Something went wrong. Please try again later</h1>
+
   return (
     <>
       <h1 className="capitalize text-[#34333A] font-bold text-4xl mb-16">
@@ -11,80 +53,65 @@ export default function history() {
       </h1>
 
       <div className="mb-20">
-        <p className="text-black font-semibold text-xl mb-7">August 2020</p>
+        {filteredLists &&
+          filteredLists.map((l) => (
+            <>
+              <p className="text-xl font-semibold text-black mb-7">{l[0]}</p>
+              {l[1].map((list) => (
+                <div className="flex items-center justify-between px-8 bg-white py-9 rounded-2xl shadow1 mb-11">
+                  <span className="text-2xl font-semibold text-black capitalize">
+                    {list.listName}
+                  </span>
 
-        <div className="px-8 py-9 bg-white rounded-2xl flex items-center justify-between shadow1 mb-11">
-          <span className="capitalize font-semibold text-black text-2xl">
-            grocery list
-          </span>
-
-          <div className="flex items-center">
-            <div className="date flex items-center gap-x-5 text-[#C1C1C4] mr-10">
-              <BsCalendarDate className="h-8 w-7" />
-              <span className="text-xl font-semibold">Mon 27.8.2022</span>
-            </div>
-            <span className="text-[#56CCF2] mr-[3.3rem] text-xl border border-solid border-[#56CCF2] rounded-xl w-32 h-10 flex items-center justify-center font-semibold">
-              completed
-            </span>
-            <BsChevronRight className="text-main-orange text-3xl" />
-          </div>
-        </div>
-
-        <div className="px-8 py-9 bg-white rounded-2xl flex items-center justify-between shadow1">
-          <span className="capitalize font-semibold text-black text-2xl">
-            eero's farewell party
-          </span>
-
-          <div className="flex items-center">
-            <div className="date flex items-center gap-x-5 text-[#C1C1C4] mr-10">
-              <BsCalendarDate className="h-8 w-7" />
-              <span className="text-xl font-semibold">Mon 27.8.2022</span>
-            </div>
-            <span className="text-[#56CCF2] mr-[3.3rem] text-xl border border-solid border-[#56CCF2] rounded-xl w-32 h-10 flex items-center justify-center font-semibold">
-              completed
-            </span>
-            <BsChevronRight className="text-main-orange text-3xl" />
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-20">
-        <p className="text-black font-semibold text-xl mb-7">July 2020</p>
-
-        <div className="px-8 py-9 bg-white rounded-2xl flex items-center justify-between shadow1 mb-11">
-          <span className="capitalize font-semibold text-black text-2xl">
-            board game week 2
-          </span>
-
-          <div className="flex items-center">
-            <div className="date flex items-center gap-x-5 text-[#C1C1C4] mr-10">
-              <BsCalendarDate className="h-8 w-7" />
-              <span className="text-xl font-semibold">Mon 27.8.2022</span>
-            </div>
-            <span className="text-[#56CCF2] mr-[3.3rem] text-xl border border-solid border-[#56CCF2] rounded-xl w-32 h-10 flex items-center justify-center font-semibold">
-              completed
-            </span>
-            <BsChevronRight className="text-main-orange text-3xl" />
-          </div>
-        </div>
-
-        <div className="px-8 py-9 bg-white rounded-2xl flex items-center justify-between shadow1">
-          <span className="capitalize font-semibold text-black text-2xl">
-            grocery list
-          </span>
-
-          <div className="flex items-center">
-            <div className="date flex items-center gap-x-5 text-[#C1C1C4] mr-10">
-              <BsCalendarDate className="h-8 w-7" />
-              <span className="text-xl font-semibold">Mon 27.8.2022</span>
-            </div>
-            <span className="text-[#EB5757] mr-[3.3rem] text-xl border border-solid border-[#EB5757] rounded-xl w-32 h-10 flex items-center justify-center font-semibold">
-              cancelled
-            </span>
-            <BsChevronRight className="text-main-orange text-3xl" />
-          </div>
-        </div>
+                  <div className="flex items-center">
+                    <div className="date flex items-center gap-x-5 text-[#C1C1C4] mr-10">
+                      <BsCalendarDate className="h-8 w-7" />
+                      <span className="text-xl font-semibold">
+                        {formateDateTwo(list.createdAt)}
+                      </span>
+                    </div>
+                    <span
+                      className={`${
+                        list.status === "COMPLETED"
+                          ? "text-[#56CCF2] border-[#56CCF2]"
+                          : "text-[#EB5757] border-[#EB5757]"
+                      } mr-[3.3rem] text-xl border border-solid rounded-xl w-32 h-10 flex items-center justify-center font-semibold`}
+                    >
+                      {list.status.toLocaleLowerCase()}
+                    </span>
+                    <Link href={`/history/${list.id}`}>
+                      <BsChevronRight className="text-3xl text-main-orange" />
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </>
+          ))}
       </div>
     </>
   )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const userSession = await getSession(context)
+
+  if (!userSession) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+      props: {},
+    }
+  }
+
+  const ssg = createProxySSGHelpers({
+    router: appRouter,
+    ctx: await createContextInner({ session: userSession }),
+    transformer: SuperJSON,
+  })
+
+  await ssg.list.allLists.prefetch()
+
+  return { props: { userSession, trpcState: ssg.dehydrate() } }
 }

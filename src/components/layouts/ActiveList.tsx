@@ -6,6 +6,7 @@ import { MdModeEditOutline } from "react-icons/md"
 import useListStatus from "../../hooks/useListStatus"
 import { RouterOutput } from "../../server/trpc"
 import { trpc } from "../../utils/trpc"
+import { formateListItems } from "../../utils/utilityFunctions"
 import ListModal from "../modals/ListModal"
 import ListItems from "./ListItems"
 
@@ -76,18 +77,18 @@ export default function ActiveList({ queryClient }: Props) {
 
   const filteredItems = useMemo(() => {
     if (!activeList) return
+    return formateListItems(activeList.listItems)
+    // const filtered: { [key: string]: typeof activeList.listItems } = {}
 
-    const filtered: { [key: string]: typeof activeList.listItems } = {}
+    // activeList.listItems.forEach((i) => {
+    //   if (i.item.category && i.item.category.name in filtered) {
+    //     filtered[i.item.category.name] = [...filtered[i.item.category.name], i]
+    //   } else if (i.item.category && !(i.item.category.name in filtered)) {
+    //     filtered[i.item.category.name] = [i]
+    //   }
+    // })
 
-    activeList.listItems.forEach((i) => {
-      if (i.item.category && i.item.category.name in filtered) {
-        filtered[i.item.category.name] = [...filtered[i.item.category.name], i]
-      } else if (i.item.category && !(i.item.category.name in filtered)) {
-        filtered[i.item.category.name] = [i]
-      }
-    })
-
-    return Object.entries(filtered)
+    // return Object.entries(filtered)
   }, [activeList])
 
   function changeListName(e: MouseEvent<HTMLElement>) {

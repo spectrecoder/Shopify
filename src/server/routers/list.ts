@@ -58,7 +58,7 @@ const listRouter = router({
             include: listInclude,
           })
 
-          console.log(upsertList)
+          // console.log(upsertList)
 
           return upsertList
         } catch (err) {
@@ -150,14 +150,23 @@ const listRouter = router({
     )
     .mutation(async ({ input: { listID, status }, ctx: { prisma } }) => {
       try {
-        await prisma.list.update({
+        const newList = await prisma.list.update({
           where: {
             id: listID,
           },
           data: {
             status,
+            listItems: {
+              updateMany: {
+                where: {},
+                data: {
+                  isDone: status === "COMPLETED" ? true : false,
+                },
+              },
+            },
           },
         })
+        return newList
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -166,38 +175,45 @@ const listRouter = router({
         })
       }
     }),
-  // allLists: protectedProcedure.query(async ({ ctx: { session, prisma } }) => {
-  //   try {
-  //     const userLists = await prisma.list.findMany({
-  //       where: {
-  //         userId: session.user.id,
-  //       },
-  //       orderBy: {
-  //         createdAt: "desc",
-  //       },
-  //       include: {
-  //         listItems: {
-  //           select: {
-  //             category: {
-  //               select: {
-  //                 id: true,
-  //                 name: true,
-  //               },
-  //             },
-
-  //           }
-  //         }
-  //       }
-  //     })
-  //     return userLists
-  //   } catch (err) {
-  //     throw new TRPCError({
-  //       code: "INTERNAL_SERVER_ERROR",
-  //       message: "An unexpected error occurred, please try again later.",
-  //       cause: err,
-  //     })
-  //   }
-  // }),
+  allLists: protectedProcedure.query(async ({ ctx: { session, prisma } }) => {
+    try {
+      const userLists = await prisma.list.findMany({
+        where: {
+          userId: session.user.id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      })
+      return userLists
+    } catch (err) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: "An unexpected error occurred, please try again later.",
+        cause: err,
+      })
+    }
+  }),
+  singleList: protectedProcedure
+    .input(z.string())
+    .query(async ({ input: listID, ctx: { prisma, session } }) => {
+      try {
+        const userList = await prisma.list.findFirst({
+          where: {
+            id: listID,
+            userId: session.user.id,
+          },
+          include: listInclude,
+        })
+        return userList
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          cause: err,
+        })
+      }
+    }),
 })
 
 export default listRouter

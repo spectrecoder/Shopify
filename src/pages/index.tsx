@@ -13,13 +13,20 @@ export default function Home({
   userSession,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const queryClient = useQueryClient()
-  const { data: items } = trpc.item.all.useQuery(undefined, {
+  const {
+    data: items,
+    isLoading,
+    isError,
+  } = trpc.item.all.useQuery(undefined, {
     onSuccess: (data) => {
       const categories = data.map((d) => ({ label: d.name, value: d.name }))
       queryClient.setQueryData(["categories"], categories)
     },
     enabled: !!userSession,
   })
+
+  if (isLoading) return <h1>Loading...</h1>
+  if (isError) return <h1>Something went wrong. Please try again later</h1>
 
   return (
     <>
