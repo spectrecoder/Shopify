@@ -88,72 +88,10 @@ const itemRouter = router({
     .input(z.string())
     .mutation(async ({ ctx: { prisma }, input: itemId }) => {
       try {
-        const [_, deleteItem] = await prisma.$transaction([
-          prisma.item.update({
-            where: { id: itemId },
-            data: {
-              lists: {
-                set: [],
-              },
-            },
-          }),
-          prisma.item.delete({
-            where: { id: itemId },
-          }),
-        ])
+        const deleteItem = await prisma.item.delete({
+          where: { id: itemId },
+        })
         return deleteItem
-      } catch (err) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An unexpected error occurred, please try again later.",
-          cause: err,
-        })
-      }
-    }),
-  updateQuantity: protectedProcedure
-    .input(z.object({ itemID: z.string(), qty: z.number() }))
-    .mutation(async ({ input: { itemID, qty }, ctx: { prisma } }) => {
-      try {
-        const updateQuantity = await prisma.item.update({
-          where: {
-            id: itemID,
-          },
-          data: {
-            quantity: qty,
-          },
-        })
-        return { itemID: updateQuantity.id, qty: updateQuantity.quantity }
-      } catch (err) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "An unexpected error occurred, please try again later.",
-          cause: err,
-        })
-      }
-    }),
-  updateDone: protectedProcedure
-    .input(
-      z.object({ trueIDs: z.string().array(), falseIDs: z.string().array() })
-    )
-    .mutation(async ({ input: { trueIDs, falseIDs }, ctx: { prisma } }) => {
-      function updateIsDoneStatus(ids: string[], status: boolean) {
-        return prisma.item.updateMany({
-          where: {
-            id: {
-              in: ids,
-            },
-          },
-          data: {
-            isDone: status,
-          },
-        })
-      }
-      try {
-        await Promise.all([
-          updateIsDoneStatus(trueIDs, true),
-          updateIsDoneStatus(falseIDs, false),
-        ])
-        return { trueIDs, falseIDs }
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

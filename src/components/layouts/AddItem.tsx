@@ -17,7 +17,6 @@ interface FormData {
 }
 
 export default function AddItem({ queryClient }: Props) {
-  // const queryClient = useQueryClient()
   const [categoryName, setCategoryName] = useState<string | undefined>(
     undefined
   )
@@ -96,7 +95,7 @@ export default function AddItem({ queryClient }: Props) {
       </h3>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="group mb-10">
+        <div className="mb-10 group">
           <label htmlFor="name" className="labelStyle">
             Name
           </label>
@@ -105,11 +104,11 @@ export default function AddItem({ queryClient }: Props) {
             type="text"
             id="name"
             placeholder="Enter a name"
-            className="inputStyle h-24"
+            className="h-24 inputStyle"
           />
         </div>
 
-        <div className="group mb-10">
+        <div className="mb-10 group">
           <label htmlFor="note" className="labelStyle">
             Note (optional)
           </label>
@@ -117,11 +116,11 @@ export default function AddItem({ queryClient }: Props) {
             {...register("note")}
             id="note"
             placeholder="Enter a note"
-            className="inputStyle h-44 resize-y pt-6"
+            className="pt-6 resize-y inputStyle h-44"
           />
         </div>
 
-        <div className="group mb-10">
+        <div className="mb-10 group">
           <label htmlFor="image" className="labelStyle">
             Image
           </label>
@@ -130,7 +129,7 @@ export default function AddItem({ queryClient }: Props) {
             type="text"
             id="image"
             placeholder="Enter a url"
-            className="inputStyle h-24"
+            className="h-24 inputStyle"
           />
         </div>
 

@@ -10,9 +10,12 @@ interface CurrentItem {
 }
 
 interface ActiveListItem {
-  category: Category | null
+  item: {
+    category: Category | null
+    id: string
+    name: string
+  }
   id: string
-  name: string
   quantity: number
   isDone: boolean
 }

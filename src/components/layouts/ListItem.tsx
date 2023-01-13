@@ -47,7 +47,7 @@ export default function ListItem({
     },
   })
 
-  const { mutate: qtyMutate } = trpc.item.updateQuantity.useMutation({
+  const { mutate: qtyMutate } = trpc.listItem.updateQuantity.useMutation({
     onSuccess: (data) => {
       queryClient.setQueryData(
         [
@@ -58,10 +58,10 @@ export default function ListItem({
         ],
         (oldData: RouterOutput["list"]["read"] | undefined) => {
           if (!oldData) return oldData
-          const updatedItems = oldData.items.map((i) =>
+          const updatedItems = oldData.listItems.map((i) =>
             i.id === data.itemID ? { ...i, quantity: data.qty } : i
           )
-          return { ...oldData, items: [...updatedItems] }
+          return { ...oldData, listItems: [...updatedItems] }
         }
       )
     },
@@ -75,7 +75,7 @@ export default function ListItem({
   })
 
   function removeItem() {
-    mutate({ listID: listId, itemID: { id: item.id } })
+    mutate({ listID: listId, itemID: item.id })
   }
 
   function changeQuantity() {
@@ -124,7 +124,7 @@ export default function ListItem({
             lineThrough ? "line-through" : "no-underline"
           }`}
         >
-          {item.name}
+          {item.item.name}
           {/* Pre-cooked cord 450g */}
         </h3>
       </form>

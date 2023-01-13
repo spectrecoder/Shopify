@@ -3,11 +3,16 @@ import { z } from "zod"
 import { TRPCError } from "@trpc/server"
 
 const listInclude = {
-  items: {
+  listItems: {
     select: {
+      item: {
+        select: {
+          id: true,
+          name: true,
+          category: true,
+        },
+      },
       id: true,
-      name: true,
-      category: true,
       quantity: true,
       isDone: true,
     },
@@ -18,34 +23,42 @@ const listRouter = router({
   createOrUpdate: protectedProcedure
     .input(
       z.object({
-        itemIDs: z.array(z.object({ id: z.string() })),
+        itemID: z.object({ id: z.string() }),
         listID: z.string().optional(),
       })
     )
     .mutation(
-      async ({ ctx: { prisma, session }, input: { listID, itemIDs } }) => {
+      async ({ ctx: { prisma, session }, input: { listID, itemID } }) => {
         try {
           const upsertList = await prisma.list.upsert({
             where: {
               id: listID || "62ee8fa9837792d2c87e0ff9",
             },
             update: {
-              items: {
-                connect: itemIDs,
+              listItems: {
+                create: {
+                  item: {
+                    connect: itemID,
+                  },
+                },
               },
             },
             create: {
               user: {
-                connect: { id: session?.user?.id },
+                connect: { id: session.user.id },
               },
-              items: {
-                connect: itemIDs[0],
+              listItems: {
+                create: {
+                  item: {
+                    connect: itemID,
+                  },
+                },
               },
             },
             include: listInclude,
           })
 
-          // console.log(upsertList)
+          console.log(upsertList)
 
           return upsertList
         } catch (err) {
@@ -80,9 +93,7 @@ const listRouter = router({
   }),
 
   removeItem: protectedProcedure
-    .input(
-      z.object({ itemID: z.object({ id: z.string() }), listID: z.string() })
-    )
+    .input(z.object({ itemID: z.string(), listID: z.string() }))
     .mutation(async ({ input: { itemID, listID }, ctx: { prisma } }) => {
       try {
         const removeItem = await prisma.list.update({
@@ -90,8 +101,10 @@ const listRouter = router({
             id: listID,
           },
           data: {
-            items: {
-              disconnect: itemID,
+            listItems: {
+              delete: {
+                id: itemID,
+              },
             },
           },
           include: listInclude,
@@ -143,15 +156,6 @@ const listRouter = router({
           },
           data: {
             status,
-            items: {
-              updateMany: {
-                where: {},
-                data: {
-                  quantity: 1,
-                  isDone: false,
-                },
-              },
-            },
           },
         })
       } catch (err) {
@@ -162,6 +166,38 @@ const listRouter = router({
         })
       }
     }),
+  // allLists: protectedProcedure.query(async ({ ctx: { session, prisma } }) => {
+  //   try {
+  //     const userLists = await prisma.list.findMany({
+  //       where: {
+  //         userId: session.user.id,
+  //       },
+  //       orderBy: {
+  //         createdAt: "desc",
+  //       },
+  //       include: {
+  //         listItems: {
+  //           select: {
+  //             category: {
+  //               select: {
+  //                 id: true,
+  //                 name: true,
+  //               },
+  //             },
+
+  //           }
+  //         }
+  //       }
+  //     })
+  //     return userLists
+  //   } catch (err) {
+  //     throw new TRPCError({
+  //       code: "INTERNAL_SERVER_ERROR",
+  //       message: "An unexpected error occurred, please try again later.",
+  //       cause: err,
+  //     })
+  //   }
+  // }),
 })
 
 export default listRouter

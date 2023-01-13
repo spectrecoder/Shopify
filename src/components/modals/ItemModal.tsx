@@ -17,6 +17,21 @@ export default function ItemModal() {
       queryClient.setQueryData(["currentMenu"], "ActiveList")
       queryClient.setQueryData(
         [
+          ["list", "read"],
+          {
+            type: "query",
+          },
+        ],
+        (oldData: RouterOutput["list"]["read"] | undefined) => {
+          if (!oldData) return oldData
+          const filteredListItems = oldData.listItems.filter(
+            (i) => i.item.id !== data.id
+          )
+          return { ...oldData, listItems: [...filteredListItems] }
+        }
+      )
+      queryClient.setQueryData(
+        [
           ["item", "all"],
           {
             type: "query",
@@ -50,7 +65,7 @@ export default function ItemModal() {
       <input type="checkbox" id="my-modal-1" className="modal-toggle" />
       <label
         htmlFor={!isLoading ? "my-modal-1" : ""}
-        className="modal cursor-pointer modal-bottom sm:modal-middle"
+        className="cursor-pointer modal modal-bottom sm:modal-middle"
       >
         <label
           className="modal-box relative min-w-[50rem] w-[50rem] h-80 px-12 py-10 flex flex-col justify-between bg-white"
@@ -67,7 +82,7 @@ export default function ItemModal() {
           <h3 className="font-semibold text-4xl leading-[3rem] w-[41rem] h-24">
             Are you sure that you want to delete the item?
           </h3>
-          <div className="modal-action flex items-center justify-right gap-x-10">
+          <div className="flex items-center modal-action justify-right gap-x-10">
             <label
               htmlFor="my-modal-1"
               className={`${

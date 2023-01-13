@@ -47,15 +47,13 @@ export default function Details({ queryClient }: Props) {
         },
       ])
 
-    if (list?.items.find((i) => i.id === currentItem.itemId)) {
+    if (list?.listItems.find((i) => i.item.id === currentItem.itemId)) {
       toast.error("Item already in the list")
       return
     }
 
     mutate({
-      itemIDs: list
-        ? [...list.items.map((i) => ({ id: i.id })), { id: currentItem.itemId }]
-        : [{ id: currentItem.itemId }],
+      itemID: { id: currentItem.itemId },
       listID: list?.id,
     })
   }

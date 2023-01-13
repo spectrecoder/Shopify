@@ -18,8 +18,9 @@ export default function ActiveList({ queryClient }: Props) {
   const [listName, setListName] = useState<string>("")
   const [trueIDs, setTrueIDs] = useState<string[]>([])
   const [falseIDs, setFalseIDs] = useState<string[]>([])
-  const { mutate: completeMutate } = useListStatus({ setShowEdit })
-
+  const { mutate: completeMutate, isLoading: completeLoading } = useListStatus({
+    setShowEdit,
+  })
   const { data: activeList, isLoading } = trpc.list.read.useQuery()
   const { mutate, isLoading: mutateLoading } =
     trpc.list.updateListName.useMutation({
@@ -38,7 +39,7 @@ export default function ActiveList({ queryClient }: Props) {
       },
     })
 
-  const { mutate: isDoneMutate } = trpc.item.updateDone.useMutation({
+  const { mutate: isDoneMutate } = trpc.listItem.updateDone.useMutation({
     onSuccess: (data) => {
       queryClient.setQueryData(
         [
@@ -50,7 +51,7 @@ export default function ActiveList({ queryClient }: Props) {
         (oldData: RouterOutput["list"]["read"] | undefined) => {
           if (!oldData) return oldData
 
-          const updatedItems = oldData.items.map((i) => {
+          const updatedItems = oldData.listItems.map((i) => {
             if (data.trueIDs.includes(i.id)) {
               return { ...i, isDone: true }
             } else if (data.falseIDs.includes(i.id)) {
@@ -59,7 +60,7 @@ export default function ActiveList({ queryClient }: Props) {
               return i
             }
           })
-          return { ...oldData, items: [...updatedItems] }
+          return { ...oldData, listItems: [...updatedItems] }
         }
       )
     },
@@ -76,13 +77,13 @@ export default function ActiveList({ queryClient }: Props) {
   const filteredItems = useMemo(() => {
     if (!activeList) return
 
-    const filtered: { [key: string]: typeof activeList.items } = {}
+    const filtered: { [key: string]: typeof activeList.listItems } = {}
 
-    activeList.items.forEach((i) => {
-      if (i.category && i.category.name in filtered) {
-        filtered[i.category.name] = [...filtered[i.category.name], i]
-      } else if (i.category && !(i.category.name in filtered)) {
-        filtered[i.category.name] = [i]
+    activeList.listItems.forEach((i) => {
+      if (i.item.category && i.item.category.name in filtered) {
+        filtered[i.item.category.name] = [...filtered[i.item.category.name], i]
+      } else if (i.item.category && !(i.item.category.name in filtered)) {
+        filtered[i.item.category.name] = [i]
       }
     })
 
@@ -182,9 +183,11 @@ export default function ActiveList({ queryClient }: Props) {
             </label>
             <button
               onClick={completeList}
-              className="w-48 h-24 btn btn-info myBtn"
+              className={`w-48 h-24 btn btn-info myBtn ${
+                completeLoading ? "pointer-events-none" : "pointer-events-auto"
+              }`}
             >
-              Complete
+              {completeLoading ? "" : "Complete"}
             </button>
           </div>
         ) : (
