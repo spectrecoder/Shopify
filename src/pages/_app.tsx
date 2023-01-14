@@ -11,7 +11,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      refetchOnMount: false,
+      refetchOnMount: false, //* don't refetch in mount(first time, not at every rerender) if data is in cache, otherwise refetch no matter what is my value
       refetchOnReconnect: false,
     },
   },

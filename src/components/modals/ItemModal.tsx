@@ -1,4 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query"
+import { useRouter } from "next/router"
 import { useRef } from "react"
 import { toast } from "react-hot-toast"
 import { RouterOutput } from "../../server/trpc"
@@ -29,6 +30,17 @@ export default function ItemModal() {
           )
           return { ...oldData, listItems: [...filteredListItems] }
         }
+      )
+      queryClient.setQueryData(
+        [["list", "singleList"]],
+        "sunny"
+        // (oldData: RouterOutput["list"]["singleList"] | undefined) => {
+        //   if (!oldData) return oldData
+        //   const filteredListItems = oldData.listItems.filter(
+        //     (i) => i.item.id !== data.id
+        //   )
+        //   return { ...oldData, listItems: [...filteredListItems] }
+        // }
       )
       queryClient.setQueryData(
         [

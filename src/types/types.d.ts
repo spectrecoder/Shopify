@@ -7,6 +7,7 @@ interface CurrentItem {
   itemName: string
   note: string
   image: string
+  show: boolean
 }
 
 interface ActiveListItem {
@@ -14,6 +15,8 @@ interface ActiveListItem {
     category: Category | null
     id: string
     name: string
+    note?: string
+    image?: string
   }
   id: string
   quantity: number

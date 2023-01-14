@@ -101,19 +101,21 @@ export default function Details({ queryClient }: Props) {
         </h2>
       </div>
 
-      <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
-        <div className="flex items-center justify-center gap-x-16">
-          <label htmlFor="my-modal-1" className="cancelBtn">
-            delete
-          </label>
-          <button
-            onClick={addToList}
-            className="w-48 h-24 btn btn-warning myBtn"
-          >
-            Add to list
-          </button>
+      {currentItem?.show && (
+        <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
+          <div className="flex items-center justify-center gap-x-16">
+            <label htmlFor="my-modal-1" className="cancelBtn">
+              delete
+            </label>
+            <button
+              onClick={addToList}
+              className="w-48 h-24 btn btn-warning myBtn"
+            >
+              Add to list
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   )
 }

@@ -13,7 +13,7 @@ export default function Sidebar() {
     <section className="w-[9.4rem] min-w-[9.4rem] bg-white h-full flex flex-col justify-between py-14 items-center">
       <Image src="/images/logo.svg" alt="logo" width={42} height={42} />
 
-      <div className="w-full h-96 flex flex-col justify-between">
+      <div className="flex flex-col justify-between w-full h-96">
         <Menu
           active={router.pathname === "/"}
           Icon={AiOutlineUnorderedList}
@@ -21,7 +21,10 @@ export default function Sidebar() {
           location="/"
         />
         <Menu
-          active={router.pathname === "/history"}
+          active={
+            router.pathname === "/history" ||
+            router.pathname.startsWith("/history")
+          }
           Icon={AiOutlineHistory}
           label="history"
           location="/history"

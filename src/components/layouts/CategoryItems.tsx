@@ -24,6 +24,7 @@ export default function CategoryItems({ item, queryClient }: Props) {
                 itemName: i.name,
                 note: i.note,
                 image: i.image,
+                show: true,
               })
               queryClient.setQueryData(["currentMenu"], "Details")
             }}

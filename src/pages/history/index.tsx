@@ -54,11 +54,14 @@ export default function history({
 
       <div className="mb-20">
         {filteredLists &&
-          filteredLists.map((l) => (
-            <>
+          filteredLists.map((l, i) => (
+            <div key={i}>
               <p className="text-xl font-semibold text-black mb-7">{l[0]}</p>
               {l[1].map((list) => (
-                <div className="flex items-center justify-between px-8 bg-white py-9 rounded-2xl shadow1 mb-11">
+                <div
+                  key={list.id}
+                  className="flex items-center justify-between px-8 bg-white py-9 rounded-2xl shadow1 mb-11"
+                >
                   <span className="text-2xl font-semibold text-black capitalize">
                     {list.listName}
                   </span>
@@ -85,7 +88,7 @@ export default function history({
                   </div>
                 </div>
               ))}
-            </>
+            </div>
           ))}
       </div>
     </>

@@ -197,13 +197,31 @@ const listRouter = router({
   singleList: protectedProcedure
     .input(z.string())
     .query(async ({ input: listID, ctx: { prisma, session } }) => {
+      if (listID.length >= 25) return null
       try {
         const userList = await prisma.list.findFirst({
           where: {
             id: listID,
             userId: session.user.id,
           },
-          include: listInclude,
+          include: {
+            listItems: {
+              select: {
+                item: {
+                  select: {
+                    id: true,
+                    name: true,
+                    note: true,
+                    image: true,
+                    category: true,
+                  },
+                },
+                id: true,
+                quantity: true,
+                isDone: true,
+              },
+            },
+          },
         })
         return userList
       } catch (err) {
