@@ -1,4 +1,10 @@
+import { trpc } from "../../utils/trpc"
+
 export default function TopItemCategory() {
+  const { data } = trpc.listItem.monthlyChart.useQuery(undefined, {
+    refetchOnMount: true,
+  })
+  console.log(data)
   return (
     <div className="h-fit">
       <h3 className="text-4xl font-semibold text-black mb-14">Top Items</h3>

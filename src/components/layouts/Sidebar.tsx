@@ -5,8 +5,13 @@ import { AiOutlineUnorderedList, AiOutlineHistory } from "react-icons/ai"
 import { BiBarChartSquare } from "react-icons/bi"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
+import { QueryClient } from "@tanstack/react-query"
 
-export default function Sidebar() {
+interface Props {
+  queryClient: QueryClient
+}
+
+export default function Sidebar({ queryClient }: Props) {
   const router = useRouter()
 
   return (
@@ -19,6 +24,7 @@ export default function Sidebar() {
           Icon={AiOutlineUnorderedList}
           label="items"
           location="/"
+          queryClient={queryClient}
         />
         <Menu
           active={
@@ -28,12 +34,14 @@ export default function Sidebar() {
           Icon={AiOutlineHistory}
           label="history"
           location="/history"
+          queryClient={queryClient}
         />
         <Menu
           active={router.pathname === "/statistics"}
           Icon={BiBarChartSquare}
           label="statistics"
           location="/statistics"
+          queryClient={queryClient}
         />
       </div>
 

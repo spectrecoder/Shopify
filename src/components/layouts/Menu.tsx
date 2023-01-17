@@ -1,3 +1,4 @@
+import { QueryClient, useQueryClient } from "@tanstack/react-query"
 import Link from "next/link"
 import { IconType } from "react-icons/lib/esm/iconBase"
 
@@ -6,12 +7,21 @@ interface Props {
   Icon: IconType
   label: string
   location: "/" | "/history" | "/statistics"
+  queryClient: QueryClient
 }
 
-export default function Menu({ active, Icon, label, location }: Props) {
+export default function Menu({
+  active,
+  Icon,
+  label,
+  location,
+  queryClient,
+}: Props) {
+  // const queryClient = useQueryClient()
   return (
     <Link href={location}>
       <button
+        onClick={() => queryClient.setQueryData(["currentMenu"], "ActiveList")}
         data-tip={label}
         className={`${
           active ? "before:block" : "before:hidden"

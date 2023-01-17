@@ -34,7 +34,7 @@ export default function Layout({ children }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ItemModal />
-      <Sidebar />
+      <Sidebar queryClient={queryClient} />
 
       <section className="flex-grow h-full py-14 px-32 overflow-scroll hideScrollbar">
         {children}
