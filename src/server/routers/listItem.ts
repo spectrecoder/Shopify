@@ -118,7 +118,9 @@ const listItemRouter = router({
               ((g._sum.quantity as number) / (totalQuantities as number)) * 100
           })
 
-          return items.map((i) => ({ ...i, percentage: percentages[i.id] }))
+          return items
+            .map((i) => ({ ...i, percentage: percentages[i.id] }))
+            .sort((a, b) => b.percentage - a.percentage)
         })
       } catch (err) {
         throw new TRPCError({
@@ -132,77 +134,76 @@ const listItemRouter = router({
   topCategories: protectedProcedure.query(
     async ({ ctx: { prisma, session } }) => {
       try {
-        return await prisma.$transaction(async (tx) => {
-          const groupItems = await tx.listItem.groupBy({
-            by: ["itemID"],
-            where: {
-              item: {
-                userId: session.user.id,
-              },
-              list: {
-                status: "COMPLETED",
-              },
-            },
-            _count: {
-              id: true,
-            },
-            orderBy: {
-              _count: {
-                id: "desc",
-              },
-            },
-            take: 3,
-          })
-
-          if (!groupItems.length) return null
-
-          const {
-            _count: { id: totalCategories },
-          } = await tx.listItem.aggregate({
-            where: {
-              item: {
-                userId: session.user.id,
-              },
-              list: {
-                status: "COMPLETED",
-              },
-            },
-            _count: {
-              id: true,
-            },
-          })
-
-          const categories = await tx.item.findMany({
-            where: {
-              userId: session.user.id,
-              id: {
-                in: groupItems.map((i) => i.itemID),
-              },
-            },
-            select: {
-              id: true,
-              category: {
-                select: {
-                  id: true,
-                  name: true,
+        const topCategories = await prisma.category.aggregateRaw({
+          pipeline: [
+            {
+              $lookup: {
+                from: "Item",
+                let: {
+                  catID: "$_id",
                 },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: { $eq: ["$categoryId", "$$catID"] },
+                    },
+                  },
+                  {
+                    $lookup: {
+                      from: "ListItem",
+                      let: {
+                        itmID: "$_id",
+                      },
+                      pipeline: [
+                        {
+                          $match: {
+                            $expr: { $eq: ["$itemID", "$$itmID"] },
+                          },
+                        },
+                        {
+                          $group: {
+                            _id: "$itemID",
+                            total: { $sum: "$quantity" },
+                          },
+                        },
+                      ],
+                      as: "listItems",
+                    },
+                  },
+                  {
+                    $set: {
+                      listItem: { $first: "$listItems" },
+                    },
+                  },
+                  {
+                    $group: {
+                      _id: "$categoryId",
+                      totalQty: { $sum: "$listItem.total" },
+                    },
+                  },
+                ],
+                as: "items",
               },
             },
-          })
-
-          const percentages: { [key: string]: number } = {}
-
-          groupItems.forEach((g) => {
-            percentages[g.itemID] =
-              ((g._count.id as number) / (totalCategories as number)) * 100
-          })
-
-          return categories.map((i) => ({
-            categoryID: i.category!.id,
-            categoryName: i.category!.name,
-            percentage: percentages[i.id],
-          }))
+            {
+              $set: {
+                totalItemsBought: { $first: "$items" },
+              },
+            },
+            {
+              $project: {
+                totalItems: { $ifNull: ["$totalItemsBought.totalQty", 0] },
+              },
+            },
+            {
+              $sort: { totalItems: -1 },
+            },
+            {
+              $limit: 3,
+            },
+          ],
         })
+        return topCategories
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -215,35 +216,49 @@ const listItemRouter = router({
   monthlyChart: protectedProcedure.query(
     async ({ ctx: { prisma, session } }) => {
       try {
-        const result = await prisma.listItem.aggregateRaw({
-          pipeline: [
-            {
-              $lookup: {
-                from: "List",
-                localField: "listId",
-                foreignField: "id",
-                as: "list",
-              },
-            },
-            {
-              $unwind: "$list",
-            },
-            {
-              $group: {
-                _id: {
-                  year: { $year: "$list.createdAt" },
-                  month: { $month: "$list.createdAt" },
-                },
-                total: { $sum: "$quantity" },
-              },
-            },
-            {
-              $sort: { "_id.year": 1, "_id.month": 1 },
-            },
-          ],
-        })
-
-        return result
+        // const result = await prisma.list.aggregateRaw({
+        //   pipeline: [
+        //     {
+        //       $lookup: {
+        //         from: "ListItem",
+        //         localField: "id",
+        //         foreignField: "listItems",
+        //         as: "listItem",
+        //       },
+        //     },
+        //     // {
+        //     //   $match: {
+        //     //     $expr: {
+        //     //       $eq: [session.user.id, { $getField: "$list.userId.$oid" }],
+        //     //     },
+        //     //   },
+        //     // },
+        //     {
+        //       $match: {
+        //         "$list.userId": { $eq: session.user.id },
+        //       },
+        //     },
+        //     // {
+        //     //   $unwind: "$list",
+        //     // },
+        //     // {
+        //     //   $group: {
+        //     //     _id: {
+        //     //       year: { $year: "$list.createdAt" },
+        //     //       month: { $month: "$list.createdAt" },
+        //     //     },
+        //     //     total: { $sum: "$quantity" },
+        //     //   },
+        //     // },
+        //     // {
+        //     //   $limit: 6,
+        //     // },
+        //     // {
+        //     //   $sort: { "_id.year": 1, "_id.month": 1 },
+        //     // },
+        //   ],
+        // })
+        // return result
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
