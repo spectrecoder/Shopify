@@ -4,7 +4,6 @@ import Details from "./Details"
 import Sidebar from "./Sidebar"
 import ActiveList from "./ActiveList"
 import AddItem from "./AddItem"
-import { useState } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import ItemModal from "../modals/ItemModal"
 
@@ -23,8 +22,6 @@ export default function Layout({ children }: Props) {
       initialData: "ActiveList",
     }
   )
-
-  const [rightSidebar, setRightSidebar] = useState<menu>("Details")
 
   return (
     <main className="h-screen w-screen bg-[#FAFAFE] flex">

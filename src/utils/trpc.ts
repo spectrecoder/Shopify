@@ -13,15 +13,15 @@ export const trpc = createTRPCNext<AppRouter>({
   config({ ctx }) {
     if (typeof window !== "undefined") {
       return {
-        queryClientConfig: {
-          defaultOptions: {
-            queries: {
-              refetchOnWindowFocus: false,
-              refetchOnMount: false, //* don't refetch in mount(first time, not at every rerender) if data is in cache, otherwise refetch no matter what is my value
-              refetchOnReconnect: false,
-            },
-          },
-        },
+        // queryClientConfig: {
+        //   defaultOptions: {
+        //     queries: {
+        //       refetchOnWindowFocus: false,
+        //       refetchOnMount: false, //* don't refetch in mount(first time, not at every rerender) if data is in cache, otherwise refetch no matter what is my value
+        //       refetchOnReconnect: false,
+        //     },
+        //   },
+        // },
         transformer: SuperJSON,
         links: [
           httpBatchLink({
@@ -31,15 +31,15 @@ export const trpc = createTRPCNext<AppRouter>({
       }
     }
     return {
-      queryClientConfig: {
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-            refetchOnMount: false, //* don't refetch in mount(first time, not at every rerender) if data is in cache, otherwise refetch no matter what is my value
-            refetchOnReconnect: false,
-          },
-        },
-      },
+      // queryClientConfig: {
+      //   defaultOptions: {
+      //     queries: {
+      //       refetchOnWindowFocus: false,
+      //       refetchOnMount: false, //* don't refetch in mount(first time, not at every rerender) if data is in cache, otherwise refetch no matter what is my value
+      //       refetchOnReconnect: false,
+      //     },
+      //   },
+      // },
       transformer: SuperJSON,
       links: [
         httpBatchLink({
@@ -83,5 +83,5 @@ export const trpc = createTRPCNext<AppRouter>({
   //     ],
   //   }
   // },
-  // ssr: false,
+  // ssr: true,
 })

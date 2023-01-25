@@ -22,21 +22,21 @@ const MyApp: AppType = ({
   pageProps: { session, ...pageProps },
 }: AppProps) => {
   return (
-    // <QueryClientProvider client={queryClient}>
-    <SessionProvider session={session}>
-      <Toaster position="top-right" reverseOrder={false} />
-      {Component.name === "auth" ||
-      Component.name === "login" ||
-      Component.name === "Error" ? (
-        <Component {...pageProps} />
-      ) : (
-        <Layout>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider session={session}>
+        <Toaster position="top-right" reverseOrder={false} />
+        {Component.name === "auth" ||
+        Component.name === "login" ||
+        Component.name === "Error" ? (
           <Component {...pageProps} />
-        </Layout>
-      )}
-      <ReactQueryDevtools initialIsOpen={false} />
-    </SessionProvider>
-    // </QueryClientProvider>
+        ) : (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </SessionProvider>
+    </QueryClientProvider>
   )
 }
 

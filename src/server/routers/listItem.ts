@@ -137,6 +137,11 @@ const listItemRouter = router({
         const topCategories = await prisma.category.aggregateRaw({
           pipeline: [
             {
+              $match: {
+                $expr: { $eq: ["$userId", { $toObjectId: session.user.id }] },
+              },
+            },
+            {
               $lookup: {
                 from: "Item",
                 let: {
@@ -158,6 +163,7 @@ const listItemRouter = router({
                         {
                           $match: {
                             $expr: { $eq: ["$itemID", "$$itmID"] },
+                            isDone: true,
                           },
                         },
                         {
@@ -191,7 +197,7 @@ const listItemRouter = router({
               },
             },
             {
-              $project: {
+              $set: {
                 totalItems: { $ifNull: ["$totalItemsBought.totalQty", 0] },
               },
             },
@@ -200,6 +206,35 @@ const listItemRouter = router({
             },
             {
               $limit: 3,
+            },
+            {
+              $group: {
+                _id: null,
+                total: { $sum: "$totalItems" },
+                categories: {
+                  $push: { name: "$name", totalItems: "$totalItems" },
+                },
+              },
+            },
+            {
+              $project: {
+                _id: "$$REMOVE",
+                result: {
+                  $map: {
+                    input: "$categories",
+                    as: "category",
+                    in: {
+                      name: "$$category.name",
+                      percentage: {
+                        $multiply: [
+                          { $divide: ["$$category.totalItems", "$total"] },
+                          100,
+                        ],
+                      },
+                    },
+                  },
+                },
+              },
             },
           ],
         })
@@ -216,49 +251,63 @@ const listItemRouter = router({
   monthlyChart: protectedProcedure.query(
     async ({ ctx: { prisma, session } }) => {
       try {
-        // const result = await prisma.list.aggregateRaw({
-        //   pipeline: [
-        //     {
-        //       $lookup: {
-        //         from: "ListItem",
-        //         localField: "id",
-        //         foreignField: "listItems",
-        //         as: "listItem",
-        //       },
-        //     },
-        //     // {
-        //     //   $match: {
-        //     //     $expr: {
-        //     //       $eq: [session.user.id, { $getField: "$list.userId.$oid" }],
-        //     //     },
-        //     //   },
-        //     // },
-        //     {
-        //       $match: {
-        //         "$list.userId": { $eq: session.user.id },
-        //       },
-        //     },
-        //     // {
-        //     //   $unwind: "$list",
-        //     // },
-        //     // {
-        //     //   $group: {
-        //     //     _id: {
-        //     //       year: { $year: "$list.createdAt" },
-        //     //       month: { $month: "$list.createdAt" },
-        //     //     },
-        //     //     total: { $sum: "$quantity" },
-        //     //   },
-        //     // },
-        //     // {
-        //     //   $limit: 6,
-        //     // },
-        //     // {
-        //     //   $sort: { "_id.year": 1, "_id.month": 1 },
-        //     // },
-        //   ],
-        // })
-        // return result
+        const chartData = await prisma.list.aggregateRaw({
+          pipeline: [
+            {
+              $match: {
+                status: "COMPLETED",
+                $expr: { $eq: ["$userId", { $toObjectId: session.user.id }] },
+              },
+            },
+            {
+              $lookup: {
+                from: "ListItem",
+                let: {
+                  lID: "$_id",
+                },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: { $eq: ["$listID", "$$lID"] },
+                    },
+                  },
+                  {
+                    $group: {
+                      _id: "$listID",
+                      totalQty: { $sum: "$quantity" },
+                    },
+                  },
+                ],
+                as: "listItems",
+              },
+            },
+            {
+              $set: {
+                listItemsQty: { $first: "$listItems" },
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  year: { $year: "$createdAt" },
+                  month: { $month: "$createdAt" },
+                },
+                totalItems: { $sum: "$listItemsQty.totalQty" },
+              },
+            },
+            {
+              $sort: {
+                "_id.year": 1,
+                "_id.month": 1,
+              },
+            },
+            {
+              $limit: 6,
+            },
+          ],
+        })
+
+        return chartData
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
