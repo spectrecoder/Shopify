@@ -12,7 +12,7 @@ export default function CategoryItems({ item, queryClient }: Props) {
     <div className="mb-20">
       <h2 className="text-3xl font-semibold text-black mb-7">{item.name}</h2>
 
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid md:grid-cols-4 sm:grid-cols-3 grid-cols-1 gap-8">
         {item.items.map((i) => (
           <button
             key={i.id}
@@ -27,6 +27,7 @@ export default function CategoryItems({ item, queryClient }: Props) {
                 show: true,
               })
               queryClient.setQueryData(["currentMenu"], "Details")
+              queryClient.setQueryData(["showMenu"], true)
             }}
             className="h-fit leading-8 text-left flex gap-x-4 justify-between w-full px-6 py-[1.3rem] rounded-2xl bg-white shadow1 text-black text-2xl font-semibold"
           >

@@ -17,7 +17,12 @@ export default function TopItems() {
       {data &&
         data.map((i) => (
           <div key={i.id} className="mb-11">
-            <p className="text-black font-semibold text-2xl mb-4">{i.name}</p>
+            <div className="flex gap-x-4 justify-between items-center">
+              <p className="text-black font-semibold text-2xl mb-4">{i.name}</p>
+              <span className="text-2xl text-black font-semibold">
+                {Math.round(i.percentage)}%
+              </span>
+            </div>
             <progress
               className="progress progress-warning w-full"
               value={i.percentage}

@@ -70,7 +70,7 @@ export default function history({
         ? filteredItems.map((c, i) => (
             <div key={i} className="mb-20">
               <h2 className="text-3xl font-semibold text-black mb-7">{c[0]}</h2>
-              <div className="grid grid-cols-4 gap-8">
+              <div className="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-1 gap-8">
                 {c[1].map((i) => (
                   <button
                     key={i.id}
@@ -85,6 +85,7 @@ export default function history({
                         show: false,
                       })
                       queryClient.setQueryData(["currentMenu"], "Details")
+                      queryClient.setQueryData(["showMenu"], true)
                     }}
                     className="h-fit leading-8 text-left flex gap-x-4 justify-between w-full px-6 py-[1.3rem] rounded-2xl bg-white shadow1 text-black text-2xl font-semibold"
                   >

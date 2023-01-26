@@ -117,7 +117,7 @@ export default function ActiveList({ queryClient }: Props) {
   if (isLoading) return <h1>Loading...</h1>
 
   return (
-    <section className="w-[39rem] min-w-[39rem] h-full bg-[#FFF0DE] pt-14 px-14 pb-64 overflow-scroll hideScrollbar relative">
+    <section className="h-full bg-[#FFF0DE] pt-14 px-14 pb-64 overflow-scroll hideScrollbar relative">
       <ListModal setShowEdit={setShowEdit} listID={activeList?.id} />
 
       <div className="w-full h-52 rounded-[2.4rem] bg-[#80485B] relative py-7 flex justify-end pr-11 mb-16">
@@ -176,7 +176,7 @@ export default function ActiveList({ queryClient }: Props) {
         </>
       )}
 
-      <div className="fixed bottom-0 right-0 w-[39rem] h-52 bg-white flex items-center justify-center">
+      <div className="fixed bottom-0 right-0 sidePageRes h-52 bg-white flex items-center justify-center">
         {showEdit ? (
           <div className="flex items-center justify-center gap-x-16">
             <label htmlFor="my-modal-6" className="cancelBtn">

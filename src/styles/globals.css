@@ -20,6 +20,9 @@
   .inputStyle {
     @apply w-full font-medium text-2xl text-[#34333A] border-2 border-solid border-[#BDBDBD] rounded-2xl px-7 focus:border-main-orange;
   }
+  .sidePageRes {
+    @apply lg:w-[39rem] lg:min-w-[39rem] w-[34rem] min-w-[34rem];
+  }
 }
 
 * {
@@ -33,7 +36,7 @@
 }
 
 html {
-  font-size: 62.5%;
+  font-size: 50%;
   overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: 6.5rem;
@@ -53,4 +56,16 @@ html {
 .hideScrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+@media (min-width: 991px) {
+  html {
+    font-size: 55%;
+  }
+}
+
+@media (min-width: 1250px) {
+  html {
+    font-size: 62.5%;
+  }
 }

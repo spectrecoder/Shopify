@@ -59,7 +59,7 @@ export default function Details({ queryClient }: Props) {
   }
 
   return (
-    <section className="w-[39rem] min-w-[39rem] h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
+    <section className="h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
       <button
         onClick={goBack}
         className="flex items-center text-2xl font-bold text-main-orange gap-x-2 mb-14"
@@ -102,7 +102,7 @@ export default function Details({ queryClient }: Props) {
       </div>
 
       {currentItem?.show && (
-        <div className="fixed bottom-0 right-0 w-[39rem] h-52 flex items-center justify-center bg-white">
+        <div className="fixed bottom-0 right-0 sidePageRes h-52 flex items-center justify-center bg-white">
           <div className="flex items-center justify-center gap-x-16">
             <label htmlFor="my-modal-1" className="cancelBtn">
               delete

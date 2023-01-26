@@ -60,14 +60,14 @@ export default function history({
               {l[1].map((list) => (
                 <div
                   key={list.id}
-                  className="flex items-center justify-between px-8 bg-white py-9 rounded-2xl shadow1 mb-11"
+                  className="flex sm:flex-row flex-col items-center justify-between px-8 bg-white py-9 rounded-2xl shadow1 mb-11 gap-x-5"
                 >
-                  <span className="text-2xl font-semibold text-black capitalize">
+                  <span className="text-2xl sm:mb-0 mb-4 font-semibold text-black capitalize">
                     {list.listName}
                   </span>
 
                   <div className="flex items-center">
-                    <div className="date flex items-center gap-x-5 text-[#C1C1C4] mr-10">
+                    <div className="date sm:flex hidden items-center gap-x-5 text-[#C1C1C4] mr-10">
                       <BsCalendarDate className="h-8 w-7" />
                       <span className="text-xl font-semibold">
                         {formateDateTwo(list.createdAt)}
@@ -78,7 +78,7 @@ export default function history({
                         list.status === "COMPLETED"
                           ? "text-[#56CCF2] border-[#56CCF2]"
                           : "text-[#EB5757] border-[#EB5757]"
-                      } mr-[3.3rem] text-xl border border-solid rounded-xl w-32 h-10 flex items-center justify-center font-semibold`}
+                      } sm:mr-[3.3rem] mr-2 text-xl border border-solid rounded-xl w-32 h-10 flex items-center justify-center font-semibold`}
                     >
                       {list.status.toLocaleLowerCase()}
                     </span>

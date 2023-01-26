@@ -22,6 +22,11 @@ export default function Layout({ children }: Props) {
       initialData: "ActiveList",
     }
   )
+  const { data: showMenu } = useQuery<boolean | undefined>(
+    ["showMenu"],
+    () => queryClient.getQueryData(["showMenu"]),
+    { initialData: false }
+  )
 
   return (
     <main className="h-screen w-screen bg-[#FAFAFE] flex">
@@ -33,13 +38,21 @@ export default function Layout({ children }: Props) {
       <ItemModal />
       <Sidebar queryClient={queryClient} />
 
-      <section className="flex-grow h-full py-14 px-32 overflow-scroll hideScrollbar">
+      <section className="flex-grow h-full py-14 lg:px-32 px-12 overflow-scroll hideScrollbar">
         {children}
       </section>
 
-      {currentMenu === "ActiveList" && <ActiveList queryClient={queryClient} />}
-      {currentMenu === "AddItem" && <AddItem queryClient={queryClient} />}
-      {currentMenu === "Details" && <Details queryClient={queryClient} />}
+      <aside
+        className={`${
+          showMenu ? "block" : "hidden"
+        } md:block sidePageRes h-full md:static md:top-auto md:right-auto fixed top-0 right-0`}
+      >
+        {currentMenu === "ActiveList" && (
+          <ActiveList queryClient={queryClient} />
+        )}
+        {currentMenu === "AddItem" && <AddItem queryClient={queryClient} />}
+        {currentMenu === "Details" && <Details queryClient={queryClient} />}
+      </aside>
     </main>
   )
 }

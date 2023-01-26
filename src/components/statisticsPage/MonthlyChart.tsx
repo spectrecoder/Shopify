@@ -65,7 +65,7 @@ export default function MonthlyChart() {
   if (isError) return <h1>Something went wrong. Please try again later</h1>
 
   return (
-    <ResponsiveContainer width="100%" height={302}>
+    <ResponsiveContainer width="100%" height="45%">
       <LineChart
         data={data.map((d) => ({
           name: months[d._id.month - 1],

@@ -6,6 +6,7 @@ import { BiBarChartSquare } from "react-icons/bi"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
 import { QueryClient } from "@tanstack/react-query"
+import Link from "next/link"
 
 interface Props {
   queryClient: QueryClient
@@ -14,9 +15,17 @@ interface Props {
 export default function Sidebar({ queryClient }: Props) {
   const router = useRouter()
 
+  function toggleMenu() {
+    const isMenu = queryClient.getQueryData(["showMenu"])
+    if (isMenu) return queryClient.setQueryData(["showMenu"], false)
+    queryClient.setQueryData(["showMenu"], true)
+  }
+
   return (
     <section className="w-[9.4rem] min-w-[9.4rem] bg-white h-full flex flex-col justify-between py-14 items-center">
-      <Image src="/images/logo.svg" alt="logo" width={42} height={42} />
+      <Link href="/">
+        <Image src="/images/logo.svg" alt="logo" width={42} height={42} />
+      </Link>
 
       <div className="flex flex-col justify-between w-full h-96">
         <Menu
@@ -46,7 +55,10 @@ export default function Sidebar({ queryClient }: Props) {
       </div>
 
       <div className="flex flex-col">
-        <button className="w-[4.2rem] h-[4.2rem] mb-6 relative rounded-full flex items-center justify-center bg-main-orange text-white text-3xl">
+        <button
+          onClick={toggleMenu}
+          className="w-[4.2rem] h-[4.2rem] mb-6 relative rounded-full flex items-center justify-center bg-main-orange text-white text-3xl"
+        >
           <FaClipboardList />
           <span className="absolute -top-2 -right-2 bg-[#EB5757] flex items-center justify-center rounded-lg text-white text-xl w-8 h-8">
             3
