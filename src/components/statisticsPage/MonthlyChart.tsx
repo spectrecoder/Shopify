@@ -8,15 +8,31 @@ import {
   Legend,
   Tooltip,
 } from "recharts"
+import { trpc } from "../../utils/trpc"
 
-const data = [
-  { name: "January", total: 400 },
-  { name: "February", total: 200 },
-  { name: "March", total: 300 },
-  { name: "April", total: 350 },
-  { name: "May", total: 100 },
-  { name: "June", total: 500 },
-  { name: "July", total: 410 },
+// const data = [
+//   { name: "January", total: 400 },
+//   { name: "February", total: 200 },
+//   { name: "March", total: 300 },
+//   { name: "April", total: 350 },
+//   { name: "May", total: 100 },
+//   { name: "June", total: 500 },
+//   { name: "July", total: 410 },
+// ]
+
+const months: string[] = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ]
 
 function renderLegendText() {
@@ -38,9 +54,25 @@ function CustomTooltip({ active, payload, label }: any) {
 }
 
 export default function MonthlyChart() {
+  const { data, isLoading, isError } = trpc.listItem.monthlyChart.useQuery(
+    undefined,
+    {
+      refetchOnMount: true,
+    }
+  )
+
+  if (isLoading) return <h1>Loading...</h1>
+  if (isError) return <h1>Something went wrong. Please try again later</h1>
+
   return (
     <ResponsiveContainer width="100%" height={302}>
-      <LineChart data={data} margin={{ top: 0, right: 20, bottom: 5, left: 0 }}>
+      <LineChart
+        data={data.map((d) => ({
+          name: months[d._id.month - 1],
+          total: d.totalItems,
+        }))}
+        margin={{ top: 0, right: 20, bottom: 5, left: 0 }}
+      >
         <XAxis
           dataKey="name"
           tick={{

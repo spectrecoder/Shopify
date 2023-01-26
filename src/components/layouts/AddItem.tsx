@@ -44,8 +44,13 @@ export default function AddItem({ queryClient }: Props) {
 
           if (oldData === undefined) {
             queryClient.setQueryData(
-              ["categories"],
-              [{ label: newCatItem.name, value: newCatItem.name }]
+              [
+                ["item", "allCategories"],
+                {
+                  type: "query",
+                },
+              ],
+              [{ value: newCatItem.name, label: newCatItem.name }]
             )
             return [newCatItem]
           }
@@ -55,13 +60,18 @@ export default function AddItem({ queryClient }: Props) {
           if (itemsList === undefined) {
             const categories = oldData.map((d) => ({
               label: d.name,
-              value: d.name,
+              name: d.name,
             }))
             queryClient.setQueryData(
-              ["categories"],
+              [
+                ["item", "allCategories"],
+                {
+                  type: "query",
+                },
+              ],
               [
                 ...categories,
-                { label: newCatItem.name, value: newCatItem.name },
+                { value: newCatItem.name, label: newCatItem.name },
               ]
             )
             return [...oldData, newCatItem]

@@ -100,6 +100,31 @@ const itemRouter = router({
         })
       }
     }),
+
+  allCategories: protectedProcedure.query(
+    async ({ ctx: { prisma, session } }) => {
+      try {
+        const categories = await prisma.category.findMany({
+          where: {
+            User: {
+              id: session.user.id,
+            },
+          },
+          select: {
+            name: true,
+          },
+        })
+
+        return categories.map((c) => ({ value: c.name, label: c.name }))
+      } catch (err) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          cause: err,
+        })
+      }
+    }
+  ),
 })
 
 export default itemRouter

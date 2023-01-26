@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server"
 import { z } from "zod"
+import { ChartData, TopCategories } from "../../types/types"
 import { protectedProcedure, router } from "../trpc"
 
 const listItemRouter = router({
@@ -238,7 +239,7 @@ const listItemRouter = router({
             },
           ],
         })
-        return topCategories
+        return topCategories as unknown as TopCategories[]
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -307,7 +308,7 @@ const listItemRouter = router({
           ],
         })
 
-        return chartData
+        return chartData as unknown as ChartData[]
       } catch (err) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",

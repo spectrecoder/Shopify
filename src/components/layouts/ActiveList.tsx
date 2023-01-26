@@ -192,8 +192,13 @@ export default function ActiveList({ queryClient }: Props) {
             </button>
           </div>
         ) : (
-          <form className="flex items-center border-2 border-solid border-main-orange w-[31rem] h-24 overflow-hidden rounded-2xl gap-4 pl-6">
+          <form
+            className={`flex items-center border-2 border-solid ${
+              !activeList ? "border-gray-400" : "border-main-orange"
+            } w-[31rem] h-24 overflow-hidden rounded-2xl gap-4 pl-6`}
+          >
             <input
+              disabled={!activeList ? true : false}
               value={listName}
               onChange={(e) => setListName(e.target.value)}
               placeholder="enter a name"
@@ -204,7 +209,11 @@ export default function ActiveList({ queryClient }: Props) {
               onClick={changeListName}
               className={`${
                 mutateLoading ? "pointer-events-none" : "pointer-events-auto"
-              } h-full w-[8.7rem] bg-main-orange text-white font-bold text-2xl flex items-center justify-center rounded-tl-2xl rounded-bl-2xl`}
+              } h-full w-[8.7rem] ${
+                !activeList
+                  ? "bg-gray-400 pointer-events-none"
+                  : "bg-main-orange pointer-events-auto"
+              } text-white font-bold text-2xl flex items-center justify-center rounded-tl-2xl rounded-bl-2xl`}
             >
               {mutateLoading ? "" : "Save"}
             </button>

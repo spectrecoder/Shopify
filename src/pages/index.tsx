@@ -18,10 +18,6 @@ export default function Home({
     isLoading,
     isError,
   } = trpc.item.all.useQuery(undefined, {
-    onSuccess: (data) => {
-      const categories = data.map((d) => ({ label: d.name, value: d.name }))
-      queryClient.setQueryData(["categories"], categories)
-    },
     enabled: !!userSession,
   })
 

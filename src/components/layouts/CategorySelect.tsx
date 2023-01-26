@@ -1,28 +1,18 @@
+import { QueryClient } from "@tanstack/react-query"
 import { Dispatch, SetStateAction } from "react"
 import CreatableSelect from "react-select/creatable"
-import { SingleValue } from "react-select"
-import { QueryClient, useQuery } from "@tanstack/react-query"
-
-const options = ["Chocolate", "Strawberry", "Vanilla"]
+import { trpc } from "../../utils/trpc"
 
 interface Props {
   setCategoryName: Dispatch<SetStateAction<string | undefined>>
   queryClient: QueryClient
 }
 
-interface Choice {
-  label: string
-  value: string
-}
-
 export default function CategorySelect({
   setCategoryName,
   queryClient,
 }: Props) {
-  const { data: categories } = useQuery<Choice[] | undefined>(
-    ["categories"],
-    () => queryClient.getQueryData<Choice[]>(["categories"])
-  )
+  const { data: categories } = trpc.item.allCategories.useQuery()
 
   return (
     <CreatableSelect
@@ -31,7 +21,7 @@ export default function CategorySelect({
       placeholder="Enter a category"
       isClearable
       openMenuOnFocus={true}
-      onChange={(choice: SingleValue<Choice>) => setCategoryName(choice?.value)}
+      onChange={(choice) => setCategoryName(choice?.label)}
       theme={(theme) => ({
         ...theme,
         colors: {
