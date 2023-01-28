@@ -1,5 +1,6 @@
 import { QueryClient, useQuery } from "@tanstack/react-query"
 import { toast } from "react-hot-toast"
+import { AiOutlineClose } from "react-icons/ai"
 import { HiOutlineArrowNarrowLeft } from "react-icons/hi"
 import { RouterOutput } from "../../server/trpc"
 import { CurrentItem } from "../../types/types"
@@ -59,7 +60,11 @@ export default function Details({ queryClient }: Props) {
   }
 
   return (
-    <section className="h-full bg-white pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
+    <section className="h-full pb-64 overflow-scroll bg-white pt-14 px-14 hideScrollbar">
+      <AiOutlineClose
+        onClick={() => queryClient.setQueryData(["showMenu"], false)}
+        className="absolute flex items-center justify-center w-10 h-10 text-white rounded-full cursor-pointer bg-main-orange top-3 right-3"
+      />
       <button
         onClick={goBack}
         className="flex items-center text-2xl font-bold text-main-orange gap-x-2 mb-14"
@@ -102,7 +107,7 @@ export default function Details({ queryClient }: Props) {
       </div>
 
       {currentItem?.show && (
-        <div className="fixed bottom-0 right-0 sidePageRes h-52 flex items-center justify-center bg-white">
+        <div className="fixed bottom-0 right-0 flex items-center justify-center bg-white sidePageRes h-52">
           <div className="flex items-center justify-center gap-x-16">
             <label htmlFor="my-modal-1" className="cancelBtn">
               delete

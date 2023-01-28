@@ -9,7 +9,7 @@
     @apply text-xl;
   }
   .myBtn {
-    @apply font-bold text-2xl text-white rounded-2xl normal-case;
+    @apply text-2xl font-bold text-white normal-case rounded-2xl;
   }
   .cancelBtn {
     @apply text-[#34333A] text-2xl font-bold cursor-pointer;
@@ -21,7 +21,7 @@
     @apply w-full font-medium text-2xl text-[#34333A] border-2 border-solid border-[#BDBDBD] rounded-2xl px-7 focus:border-main-orange;
   }
   .sidePageRes {
-    @apply lg:w-[39rem] lg:min-w-[39rem] w-[34rem] min-w-[34rem];
+    @apply lg:w-[39rem] lg:min-w-[39rem] sm:w-[34rem] sm:min-w-[34rem] w-full min-w-full;
   }
 }
 

@@ -38,7 +38,7 @@ export default function Layout({ children }: Props) {
       <ItemModal />
       <Sidebar queryClient={queryClient} />
 
-      <section className="flex-grow h-full py-14 lg:px-32 px-12 overflow-scroll hideScrollbar">
+      <section className="flex-grow h-full px-12 overflow-scroll py-14 lg:px-32 hideScrollbar">
         {children}
       </section>
 

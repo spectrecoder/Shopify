@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form"
 import { toast } from "react-hot-toast"
 import { QueryClient, useQueryClient } from "@tanstack/react-query"
 import { RouterOutput } from "../../server/trpc"
+import { AiOutlineClose } from "react-icons/ai"
 
 interface Props {
   queryClient: QueryClient
@@ -99,7 +100,12 @@ export default function AddItem({ queryClient }: Props) {
   }
 
   return (
-    <section className="h-full pt-14 px-14 pb-64 overflow-scroll hideScrollbar">
+    <section className="h-full pb-64 overflow-scroll bg-white pt-14 px-14 hideScrollbar">
+      <AiOutlineClose
+        onClick={() => queryClient.setQueryData(["showMenu"], false)}
+        className="absolute flex items-center justify-center w-10 h-10 text-white rounded-full cursor-pointer bg-main-orange top-3 right-3"
+      />
+
       <h3 className="text-4xl font-semibold text-black mb-14">
         Add a new item
       </h3>
@@ -152,7 +158,7 @@ export default function AddItem({ queryClient }: Props) {
             queryClient={queryClient}
           />
         </div>
-        <div className="fixed bottom-0 right-0 sidePageRes h-52 flex items-center justify-center bg-white">
+        <div className="fixed bottom-0 right-0 flex items-center justify-center bg-white sidePageRes h-52">
           <div className="flex items-center justify-center gap-x-16">
             <span
               onClick={() =>

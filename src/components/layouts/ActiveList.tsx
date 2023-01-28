@@ -2,6 +2,7 @@ import { QueryClient } from "@tanstack/react-query"
 import Image from "next/image"
 import { MouseEvent, useMemo, useState } from "react"
 import { toast } from "react-hot-toast"
+import { AiOutlineClose } from "react-icons/ai"
 import { MdModeEditOutline } from "react-icons/md"
 import useListStatus from "../../hooks/useListStatus"
 import { RouterOutput } from "../../server/trpc"
@@ -120,6 +121,11 @@ export default function ActiveList({ queryClient }: Props) {
     <section className="h-full bg-[#FFF0DE] pt-14 px-14 pb-64 overflow-scroll hideScrollbar relative">
       <ListModal setShowEdit={setShowEdit} listID={activeList?.id} />
 
+      <AiOutlineClose
+        onClick={() => queryClient.setQueryData(["showMenu"], false)}
+        className="absolute flex items-center justify-center w-10 h-10 text-white rounded-full cursor-pointer bg-main-orange top-3 right-3"
+      />
+
       <div className="w-full h-52 rounded-[2.4rem] bg-[#80485B] relative py-7 flex justify-end pr-11 mb-16">
         <div className="absolute w-full h-full -top-6 -left-40">
           <Image src="/images/source.svg" alt="wine" fill />
@@ -176,7 +182,7 @@ export default function ActiveList({ queryClient }: Props) {
         </>
       )}
 
-      <div className="fixed bottom-0 right-0 sidePageRes h-52 bg-white flex items-center justify-center">
+      <div className="fixed bottom-0 right-0 flex items-center justify-center bg-white sidePageRes h-52">
         {showEdit ? (
           <div className="flex items-center justify-center gap-x-16">
             <label htmlFor="my-modal-6" className="cancelBtn">
