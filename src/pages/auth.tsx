@@ -2,15 +2,15 @@ import Image from "next/image"
 import SocialLogin from "../components/layouts/SocialLogin"
 import { useState } from "react"
 
-export default function auth() {
+export default function Auth() {
   const [isRegister, setIsRegister] = useState<boolean>(false)
 
   return (
-    <section className="bg-white flex justify-center items-center h-screen">
+    <section className="flex items-center justify-center h-screen bg-white">
       <form className="bg-white border-2 border-solid border-[#BDBDBD] rounded-3xl py-14 px-20 w-[47.3rem] overflow-scroll hideScrollbar">
-        <div className="flex items-center gap-x-6 mb-12">
+        <div className="flex items-center mb-12 gap-x-6">
           <Image src="/images/logo.svg" alt="logo" width={42} height={42} />
-          <span className="font-bold text-main-orange text-4xl">
+          <span className="text-4xl font-bold text-main-orange">
             Shoppingify
           </span>
         </div>
@@ -21,7 +21,7 @@ export default function auth() {
           <h1 className="text-[#333333] text-3xl font-bold mb-11">Login</h1>
         )}
 
-        <div className="group mb-6">
+        <div className="mb-6 group">
           <label htmlFor="name" className="labelStyle">
             Email
           </label>
@@ -29,7 +29,7 @@ export default function auth() {
             type="email"
             id="name"
             placeholder="Enter your email"
-            className="inputStyle h-20"
+            className="h-20 inputStyle"
           />
         </div>
 
@@ -41,20 +41,20 @@ export default function auth() {
             type="password"
             id="name"
             placeholder="Enter your password"
-            className="inputStyle h-20"
+            className="h-20 inputStyle"
           />
         </div>
 
         {isRegister ? (
           <input
             type="submit"
-            className="btn btn-warning rounded-2xl w-full h-16 font-bold text-white text-2xl capitalize mb-12"
+            className="w-full h-16 mb-12 text-2xl font-bold text-white capitalize btn btn-warning rounded-2xl"
             value="Register"
           />
         ) : (
           <input
             type="submit"
-            className="btn btn-warning rounded-2xl w-full h-16 font-bold text-white text-2xl capitalize mb-12"
+            className="w-full h-16 mb-12 text-2xl font-bold text-white capitalize btn btn-warning rounded-2xl"
             value="Login"
           />
         )}

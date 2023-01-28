@@ -4,15 +4,15 @@ import MonthlyChart from "../components/statisticsPage/MonthlyChart"
 import TopCategories from "../components/statisticsPage/TopCategories"
 import TopItems from "../components/statisticsPage/TopItems"
 
-export default function statistics() {
+export default function Statistics() {
   return (
     <>
-      <div className="grid md:grid-cols-2 grid-cols-1 gap-y-10 md:gap-x-24 mb-24">
+      <div className="grid grid-cols-1 mb-24 md:grid-cols-2 gap-y-10 md:gap-x-24">
         <TopItems />
         <TopCategories />
       </div>
 
-      <h3 className="text-4xl font-semibold text-black mb-16 capitalize">
+      <h3 className="mb-16 text-4xl font-semibold text-black capitalize">
         monthly summary
       </h3>
 

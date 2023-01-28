@@ -123,7 +123,7 @@ export default function ActiveList({ queryClient }: Props) {
 
       <AiOutlineClose
         onClick={() => queryClient.setQueryData(["showMenu"], false)}
-        className="absolute flex items-center justify-center w-10 h-10 text-white rounded-full cursor-pointer bg-main-orange top-3 right-3"
+        className="absolute block w-10 h-10 text-white rounded-full cursor-pointer sm:hidden bg-main-orange top-3 right-3"
       />
 
       <div className="w-full h-52 rounded-[2.4rem] bg-[#80485B] relative py-7 flex justify-end pr-11 mb-16">

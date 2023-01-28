@@ -103,7 +103,7 @@ export default function AddItem({ queryClient }: Props) {
     <section className="h-full pb-64 overflow-scroll bg-white pt-14 px-14 hideScrollbar">
       <AiOutlineClose
         onClick={() => queryClient.setQueryData(["showMenu"], false)}
-        className="absolute flex items-center justify-center w-10 h-10 text-white rounded-full cursor-pointer bg-main-orange top-3 right-3"
+        className="absolute block w-10 h-10 text-white rounded-full cursor-pointer sm:hidden bg-main-orange top-3 right-3"
       />
 
       <h3 className="text-4xl font-semibold text-black mb-14">

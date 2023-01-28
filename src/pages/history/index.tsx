@@ -13,7 +13,7 @@ import Link from "next/link"
 // t4UR3b5haZ6em8CmB55-UUZMp9CwM2Ujd_-96xXj3oSOEN0NXR - secret
 // SDFQSThXWTBoRE03QUstN3Jjd1o6MTpjaQ - client
 
-export default function history({
+export default function History({
   userSession,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const {
@@ -60,9 +60,9 @@ export default function history({
               {l[1].map((list) => (
                 <div
                   key={list.id}
-                  className="flex sm:flex-row flex-col items-center justify-between px-8 bg-white py-9 rounded-2xl shadow1 mb-11 gap-x-5"
+                  className="flex flex-col items-center justify-between px-8 bg-white sm:flex-row py-9 rounded-2xl shadow1 mb-11 gap-x-5"
                 >
-                  <span className="text-2xl sm:mb-0 mb-4 font-semibold text-black capitalize">
+                  <span className="mb-4 text-2xl font-semibold text-black capitalize sm:mb-0">
                     {list.listName}
                   </span>
 

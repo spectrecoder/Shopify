@@ -13,7 +13,7 @@ import { ActiveListItem } from "../../types/types"
 import { trpc } from "../../utils/trpc"
 import { formateDateTwo, formateListItems } from "../../utils/utilityFunctions"
 
-export default function history({
+export default function HistoryPage({
   userSession,
   listId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -70,7 +70,7 @@ export default function history({
         ? filteredItems.map((c, i) => (
             <div key={i} className="mb-20">
               <h2 className="text-3xl font-semibold text-black mb-7">{c[0]}</h2>
-              <div className="grid lg:grid-cols-4 sm:grid-cols-3 grid-cols-1 gap-8">
+              <div className="grid grid-cols-1 gap-8 lg:grid-cols-4 sm:grid-cols-3">
                 {c[1].map((i) => (
                   <button
                     key={i.id}
