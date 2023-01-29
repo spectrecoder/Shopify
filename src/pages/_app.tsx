@@ -26,7 +26,9 @@ const MyApp: AppType = ({
       <SessionProvider session={session}>
         <Toaster position="top-right" reverseOrder={false} />
         {Component.name === "Auth" ||
+        Component.name === "auth" ||
         Component.name === "Login" ||
+        Component.name === "login" ||
         Component.name === "Error" ? (
           <Component {...pageProps} />
         ) : (
