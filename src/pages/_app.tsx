@@ -6,6 +6,8 @@ import { trpc } from "../utils/trpc"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast"
+import type { ReactElement, ReactNode } from "react"
+import type { NextComponentType, NextPage } from "next"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,25 +19,25 @@ const queryClient = new QueryClient({
   },
 })
 
-const MyApp: AppType = ({
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
+const MyApp = ({
   Component,
   pageProps: { session, ...pageProps },
-}: AppProps) => {
+}: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout || ((page) => page)
+
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider session={session}>
         <Toaster position="top-right" reverseOrder={false} />
-        {Component.name === "Auth" ||
-        Component.name === "auth" ||
-        Component.name === "Login" ||
-        Component.name === "login" ||
-        Component.name === "Error" ? (
-          <Component {...pageProps} />
-        ) : (
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        )}
+        {getLayout(<Component {...pageProps} />)}
         <ReactQueryDevtools initialIsOpen={false} />
       </SessionProvider>
     </QueryClientProvider>

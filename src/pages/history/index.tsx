@@ -6,9 +6,10 @@ import SuperJSON from "superjson"
 import { createContextInner } from "../../server/context"
 import { appRouter } from "../../server/routers/_app"
 import { trpc } from "../../utils/trpc"
-import { useMemo } from "react"
+import { ReactElement, useMemo } from "react"
 import { formatDate, formateDateTwo } from "../../utils/utilityFunctions"
 import Link from "next/link"
+import Layout from "../../components/layouts/Layout"
 
 // t4UR3b5haZ6em8CmB55-UUZMp9CwM2Ujd_-96xXj3oSOEN0NXR - secret
 // SDFQSThXWTBoRE03QUstN3Jjd1o6MTpjaQ - client
@@ -93,6 +94,10 @@ export default function History({
       </div>
     </>
   )
+}
+
+History.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

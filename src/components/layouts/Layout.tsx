@@ -6,6 +6,7 @@ import ActiveList from "./ActiveList"
 import AddItem from "./AddItem"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import ItemModal from "../modals/ItemModal"
+import { trpc } from "../../utils/trpc"
 
 interface Props {
   children: JSX.Element
@@ -27,6 +28,7 @@ export default function Layout({ children }: Props) {
     () => queryClient.getQueryData(["showMenu"]),
     { initialData: false }
   )
+  const { data: activeList, isLoading } = trpc.list.read.useQuery()
 
   return (
     <main className="h-screen w-screen bg-[#FAFAFE] flex">
@@ -36,7 +38,7 @@ export default function Layout({ children }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <ItemModal />
-      <Sidebar queryClient={queryClient} />
+      <Sidebar queryClient={queryClient} totalItems={activeList} />
 
       <section className="flex-grow h-full px-12 overflow-scroll py-14 lg:px-32 hideScrollbar">
         {children}
@@ -48,7 +50,11 @@ export default function Layout({ children }: Props) {
         } md:block sidePageRes h-full md:static md:top-auto md:right-auto fixed top-0 right-0`}
       >
         {currentMenu === "ActiveList" && (
-          <ActiveList queryClient={queryClient} />
+          <ActiveList
+            queryClient={queryClient}
+            activeList={activeList}
+            isLoading={isLoading}
+          />
         )}
         {currentMenu === "AddItem" && <AddItem queryClient={queryClient} />}
         {currentMenu === "Details" && <Details queryClient={queryClient} />}

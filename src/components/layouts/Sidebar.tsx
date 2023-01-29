@@ -11,28 +11,11 @@ import { RouterOutput } from "../../server/trpc"
 
 interface Props {
   queryClient: QueryClient
+  totalItems: RouterOutput["list"]["read"] | undefined
 }
 
-export default function Sidebar({ queryClient }: Props) {
+export default function Sidebar({ queryClient, totalItems }: Props) {
   const router = useRouter()
-
-  const { data: totalItems } = useQuery<
-    RouterOutput["list"]["read"] | undefined
-  >(
-    [
-      ["list", "read"],
-      {
-        type: "query",
-      },
-    ],
-    () =>
-      queryClient.getQueryData<RouterOutput["list"]["read"]>([
-        ["list", "read"],
-        {
-          type: "query",
-        },
-      ])
-  )
 
   function toggleMenu() {
     const isMenu = queryClient.getQueryData(["showMenu"])

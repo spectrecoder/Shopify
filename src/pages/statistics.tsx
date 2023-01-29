@@ -1,8 +1,10 @@
 import { GetServerSidePropsContext } from "next"
 import { getSession } from "next-auth/react"
+import Layout from "../components/layouts/Layout"
 import MonthlyChart from "../components/statisticsPage/MonthlyChart"
 import TopCategories from "../components/statisticsPage/TopCategories"
 import TopItems from "../components/statisticsPage/TopItems"
+import { ReactElement } from "react"
 
 export default function Statistics() {
   return (
@@ -19,6 +21,10 @@ export default function Statistics() {
       <MonthlyChart />
     </>
   )
+}
+
+Statistics.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

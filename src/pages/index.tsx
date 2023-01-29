@@ -5,9 +5,11 @@ import { getSession } from "next-auth/react"
 import SuperJSON from "superjson"
 import HeaderPart from "../components/itemPage/HeaderPart"
 import CategoryItems from "../components/layouts/CategoryItems"
+import Layout from "../components/layouts/Layout"
 import { createContextInner } from "../server/context"
 import { appRouter } from "../server/routers/_app"
 import { trpc } from "../utils/trpc"
+import { ReactElement } from "react"
 
 export default function Home({
   userSession,
@@ -34,6 +36,10 @@ export default function Home({
       )}
     </>
   )
+}
+
+Home.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

@@ -3,10 +3,11 @@ import { createProxySSGHelpers } from "@trpc/react-query/ssg"
 import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next"
 import { getSession } from "next-auth/react"
 import Link from "next/link"
-import { useMemo } from "react"
+import { useMemo, ReactElement } from "react"
 import { BsCalendarDate } from "react-icons/bs"
 import { HiOutlineArrowNarrowLeft } from "react-icons/hi"
 import SuperJSON from "superjson"
+import Layout from "../../components/layouts/Layout"
 import { createContextInner } from "../../server/context"
 import { appRouter } from "../../server/routers/_app"
 import { ActiveListItem } from "../../types/types"
@@ -101,6 +102,10 @@ export default function HistoryPage({
         : null}
     </>
   )
+}
+
+HistoryPage.getLayout = function getLayout(page: ReactElement) {
+  return <Layout>{page}</Layout>
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

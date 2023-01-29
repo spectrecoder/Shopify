@@ -13,9 +13,15 @@ import ListItems from "./ListItems"
 
 interface Props {
   queryClient: QueryClient
+  isLoading: boolean
+  activeList: RouterOutput["list"]["read"] | undefined
 }
 
-export default function ActiveList({ queryClient }: Props) {
+export default function ActiveList({
+  queryClient,
+  isLoading,
+  activeList,
+}: Props) {
   const [showEdit, setShowEdit] = useState<boolean>(false)
   const [listName, setListName] = useState<string>("")
   const [trueIDs, setTrueIDs] = useState<string[]>([])
@@ -23,7 +29,6 @@ export default function ActiveList({ queryClient }: Props) {
   const { mutate: completeMutate, isLoading: completeLoading } = useListStatus({
     setShowEdit,
   })
-  const { data: activeList, isLoading } = trpc.list.read.useQuery()
   const { mutate, isLoading: mutateLoading } =
     trpc.list.updateListName.useMutation({
       onSuccess: (data) => {
