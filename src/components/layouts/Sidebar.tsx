@@ -5,8 +5,9 @@ import { AiOutlineUnorderedList, AiOutlineHistory } from "react-icons/ai"
 import { BiBarChartSquare } from "react-icons/bi"
 import { signOut } from "next-auth/react"
 import { useRouter } from "next/router"
-import { QueryClient } from "@tanstack/react-query"
+import { QueryClient, useQuery } from "@tanstack/react-query"
 import Link from "next/link"
+import { RouterOutput } from "../../server/trpc"
 
 interface Props {
   queryClient: QueryClient
@@ -14,6 +15,24 @@ interface Props {
 
 export default function Sidebar({ queryClient }: Props) {
   const router = useRouter()
+
+  const { data: totalItems } = useQuery<
+    RouterOutput["list"]["read"] | undefined
+  >(
+    [
+      ["list", "read"],
+      {
+        type: "query",
+      },
+    ],
+    () =>
+      queryClient.getQueryData<RouterOutput["list"]["read"]>([
+        ["list", "read"],
+        {
+          type: "query",
+        },
+      ])
+  )
 
   function toggleMenu() {
     const isMenu = queryClient.getQueryData(["showMenu"])
@@ -60,8 +79,12 @@ export default function Sidebar({ queryClient }: Props) {
           className="w-[4.2rem] h-[4.2rem] mb-6 relative rounded-full flex items-center justify-center bg-main-orange text-white text-3xl"
         >
           <FaClipboardList />
-          <span className="absolute -top-2 -right-2 bg-[#EB5757] flex items-center justify-center rounded-lg text-white text-xl w-8 h-8">
-            3
+          <span
+            className={`absolute -top-2 -right-2 bg-[#EB5757] ${
+              totalItems ? "flex" : "hidden"
+            } items-center justify-center rounded-lg text-white text-xl w-8 h-8`}
+          >
+            {totalItems && totalItems.listItems.length}
           </span>
         </button>
 

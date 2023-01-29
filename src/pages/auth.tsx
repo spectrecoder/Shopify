@@ -78,7 +78,7 @@ export default function Auth() {
           </p>
         ) : (
           <p className="font-medium text-[#828282] text-2xl text-center">
-            Don't have an account yet?
+            {"Don't"} have an account yet?
             <span
               className="text-[#2D9CDB] cursor-pointer"
               onClick={() => setIsRegister(true)}

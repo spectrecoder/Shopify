@@ -35,7 +35,7 @@ export default function HistoryPage({
     return formateListItems(singleList.listItems as ActiveListItem[])
   }, [singleList])
 
-  if (singleList === null) return <h1>List doesn't exist</h1>
+  if (singleList === null) return <h1>List {"doesn't"} exist</h1>
   if (isLoading || isRefetching) return <h1>Loading...</h1>
   if (isError || isRefetchError)
     return <h1>Something went wrong. Please try again later!!!</h1>
@@ -62,7 +62,7 @@ export default function HistoryPage({
 
       {!singleList.listItems.length && (
         <h1 className="text-2xl font-medium text-main-orange">
-          You have deleted this list's item
+          You have deleted this {"list's"} item
         </h1>
       )}
 
