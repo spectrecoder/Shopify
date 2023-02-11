@@ -73,7 +73,7 @@ model Item {
 
 model Category {
     id     String  @id @default(auto()) @map("_id") @db.ObjectId
-    name   String  @unique
+    name   String
     items  Item[]
     User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String? @db.ObjectId

@@ -15,43 +15,60 @@ const itemRouter = router({
     .mutation(async ({ input, ctx: { prisma, session } }) => {
       try {
         const { name, note, image, categoryName } = input
-        const createdItem = await prisma.item.create({
-          data: {
-            name,
-            note,
-            image,
-            User: {
-              connect: {
+        let categoryId: string = ""
+        return await prisma.$transaction(async (tx) => {
+          const checkCategory = await tx.category.findFirst({
+            where: {
+              name,
+              User: {
                 id: session.user.id,
               },
             },
-            category: {
-              connectOrCreate: {
-                where: {
-                  name: categoryName,
-                },
-                create: {
-                  name: categoryName,
-                  User: {
-                    connect: {
-                      id: session?.user?.id,
-                    },
+          })
+          if (checkCategory) {
+            categoryId = checkCategory.id
+          } else {
+            const createCategory = await tx.category.create({
+              data: {
+                name: categoryName,
+                User: {
+                  connect: {
+                    id: session?.user?.id,
                   },
                 },
               },
-            },
-          },
-          include: {
-            category: {
-              select: {
-                id: true,
-                name: true,
+            })
+            categoryId = createCategory.id
+          }
+
+          const createdItem = await tx.item.create({
+            data: {
+              name,
+              note,
+              image,
+              User: {
+                connect: {
+                  id: session.user.id,
+                },
+              },
+              category: {
+                connect: {
+                  id: categoryId,
+                },
               },
             },
-          },
-        })
+            include: {
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          })
 
-        return createdItem
+          return createdItem
+        })
       } catch (err) {
         console.log(err)
         throw new TRPCError({
